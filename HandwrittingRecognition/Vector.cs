@@ -4,16 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LinearBinaryPattern
+namespace HandwrittingRecognition
 {
     class Vector
     {
         public static double[] normalyzeVektor(double[] vektor)
         {
             double sum = 0;
-            for (int i = 0; i < 300; i++)
+            for (int i = 0; i < vektor.Length; i++)
                 sum += vektor[i];
-            for (int i = 0; i < 300; i++)
+            for (int i = 0; i < vektor.Length; i++)
                 vektor[i] = vektor[i] / sum;
             return vektor;
         }

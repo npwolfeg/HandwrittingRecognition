@@ -1,4 +1,4 @@
-﻿namespace LinearBinaryPattern
+﻿namespace HandwrittingRecognition
 {
     partial class Form1
     {

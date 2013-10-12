@@ -55,6 +55,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="HandwrittenDigit.cs" />
+    <Compile Include="LBPLearning.cs" />
     <Compile Include="LearningProcedures.cs" />
     <Compile Include="Pixel.cs" />
     <Compile Include="Program.cs" />

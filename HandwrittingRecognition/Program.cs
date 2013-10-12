@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.IO;
 
-namespace LinearBinaryPattern
+namespace HandwrittingRecognition
 {
     static class Program
     {

@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using System.IO;
 
 
-namespace LinearBinaryPattern
+namespace HandwrittingRecognition
 {
     public partial class Form1 : Form
     {
@@ -32,7 +32,7 @@ namespace LinearBinaryPattern
         //string path = @"F:\C#\MNIST Reader\MNIST Reader\bin\Debug\";
         string path = @"F:\C#\NumberPicturesSaver\NumberPicturesSaver\bin\Debug\";
         Point[] points = new Point[2];
-        SimpleLearning learner = new SimpleLearning();
+        LBPLearning learner = new LBPLearning();
 
         public void clearWideHistograms()
         {

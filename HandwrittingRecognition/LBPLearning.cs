@@ -2,55 +2,65 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Drawing;
+using System.Threading.Tasks;
 using System.IO;
 using System.Windows.Forms;
 using System.ComponentModel;
+using System.Drawing;
 
 namespace HandwrittingRecognition
 {
-    public class SimpleLearning
+    class LBPLearning
     {
-        static int optionsCount = 10;
-        public int vectorLength = 100*100;
-        public double[][] weights = new double[optionsCount][];
-        string path = @"F:\DigitDB\PictureSaver\";
+        public int optionsCount = 10;
+        public int vectorLength;
+        int histogramLength;
+        //int pointsCount = 8; //vectorLenghth depends on it!!! (initialize method 256 = 2^8)
+        //int radius = 2;
+        int blockRows = 4;
+        int blockCols = 4;
+        static int picWidth = 100;
+        static int picHeight = 100;
+        int blockWidth;
+        int blockHeight;
+        //double[, ,][] wideHistograms = new double[10, blockCols, blockRows][];
+        public double[][] weights;
         LearningProcedures.getVector handler;
 
-        public SimpleLearning()
+        public LBPLearning()
         {
             handler = getVector;
-            initialize(127);
+            initialize(2, 2);
         }
 
-        private void initialize(int defaultWeight)
+        private void initialize(int blockCols, int blockRows)
         {
+            this.blockCols = blockCols;
+            this.blockRows = blockRows;
+            weights = new double[optionsCount][];
+            histogramLength = (int)Math.Pow(2, 8);
+            vectorLength = histogramLength * blockRows * blockCols;
+
+            blockWidth = picWidth / blockCols;
+            blockHeight = picHeight / blockRows;
             for (int n = 0; n < optionsCount; n++)
             {
                 weights[n] = new double[vectorLength];
                 for (int i = 0; i < vectorLength; i++)
-                        weights[n][i] = defaultWeight;
-                }
-        }
-
-        private void randomInitialize()
-        {
-            Random rand = new Random();
-            for (int n = 0; n < optionsCount; n++)
-            {
-                weights[n] = new double[vectorLength];
-                for (int i = 0; i < vectorLength; i++)
-                    weights[n][i] = rand.Next(255);
+                    weights[n][i] = 0;
             }
         }
 
         public void saveWeights(string path)
         {
+            File.Delete(path);
             using (StreamWriter sw = new StreamWriter(path))
             {
+                sw.WriteLine(blockCols.ToString());
+                sw.WriteLine(blockRows.ToString());
                 for (int n = 0; n < optionsCount; n++)
                     for (int i = 0; i < vectorLength; i++)
-                            sw.WriteLine(weights[n][i].ToString());
+                        sw.WriteLine(weights[n][i].ToString());
             }
         }
 
@@ -67,9 +77,10 @@ namespace HandwrittingRecognition
         {
             using (StreamReader sw = new StreamReader(path))
             {
+                initialize(Convert.ToInt32(sw.ReadLine()), Convert.ToInt32(sw.ReadLine()));
                 for (int n = 0; n < optionsCount; n++)
                     for (int i = 0; i < vectorLength; i++)
-                            weights[n][i] = Convert.ToDouble(sw.ReadLine());
+                        weights[n][i] = Convert.ToDouble(sw.ReadLine());
             }
         }
 
@@ -82,35 +93,57 @@ namespace HandwrittingRecognition
             }
         }
 
-        public Bitmap visualize()
+        public Bitmap visualize() //stub
         {
             Bitmap result = new Bitmap(1000, 100);
-            loadWeights();
-            for (int n = 0; n < optionsCount; n++)
+            return result;
+        }
+
+        static public int analyzePixel(Bitmap bmp, int x, int y)
+        {
+            int sum = 0;
+            if (x > 0 && x < bmp.Width-1 && y > 0 && y < bmp.Height-1)
             {
-                int counter = 0;
-                for (int i = 0; i < 100; i++)
-                    for (int j = 0; j < 100; j++)
-                    {
-                        double pixel = weights[n][counter];
-                        if (pixel < 0) pixel = 0;
-                        if (pixel > 255) pixel = 255;
-                        result.SetPixel(n * 100 + i, j, Color.FromArgb(255, (int)pixel, (int)pixel, (int)pixel));
-                        counter++;
-                    }
+                int power = 0;
+                for (int i = -1; i < 2; i++)
+                    for (int j = -1; j < 2; j++)
+                        if (i != 0 || j != 0)
+                        {
+                            if (bmp.GetPixel(x + i, y + j).R >= bmp.GetPixel(x, y).R)
+                                sum += (int)Math.Pow(2, power);
+                            power++;
+                        }
             }
+            return sum;
+        }
+
+        public double[] getHistogram(Bitmap bmp)
+        {
+            double[] result = new double[histogramLength];
+            for (int i = 0; i < bmp.Width; i++)
+                for (int j = 0; j < bmp.Height; j++)
+                    result[analyzePixel(bmp, i, j)]++;
+            result = Vector.normalyzeVektor(result);
             return result;
         }
 
         public double[] getVector(Bitmap bmp)
         {
             double[] result = new double[vectorLength];
+            Rectangle copyRect;
             int counter = 0;
-            for (int i = 0; i < 100; i++)
-                for (int j = 0; j < 100; j++)
+
+            for (int i = 0; i < blockCols; i++)
+                for (int j = 0; j < blockRows; j++)
                 {
-                    result[counter] = bmp.GetPixel(i, j).R;
-                    counter++;
+                    copyRect = new Rectangle(i * blockWidth, j * blockHeight, blockWidth, blockHeight);
+                    Bitmap partOfBmp = BmpProcesser.copyPartOfBitmap(bmp, copyRect);
+                    double[] currentHistogram = getHistogram(partOfBmp);
+                    for (int k = 0; k < histogramLength; k++)
+                    {
+                        result[counter] = currentHistogram[k];
+                        counter++;
+                    }
                 }
             return result;
         }
@@ -134,18 +167,17 @@ namespace HandwrittingRecognition
         public int[,] guessAll(int guessingCount, BackgroundWorker bw)
         {
             LearningProcedures l = new LearningProcedures();
-            return l.guessAll(weights,guessingCount, bw,optionsCount,vectorLength,handler);
+            return l.guessAll(weights, guessingCount, bw, optionsCount, vectorLength, handler);
         }
 
         public void AutoTest(BackgroundWorker bw)
         {
-            int i = 127;
-            initialize(i);
-            string path = @"F:\C#\HandwrittingRecognition\HandwrittingRecognition\bin\Debug\weights\"+this.GetType().Name+@"\auto\" + "defaultWeight" + i;
-            AutoTest(bw, path);
-            randomInitialize();
-            path = @"F:\C#\HandwrittingRecognition\HandwrittingRecognition\bin\Debug\weights\" + this.GetType().Name + @"\auto\" + "randomWeight";
-            AutoTest(bw, path);
+            for (int i = 4; i <= 8; i += 2)
+            {
+                initialize(i, i);
+                string path = @"F:\C#\HandwrittingRecognition\HandwrittingRecognition\bin\Debug\weights\" + this.GetType().Name + @"\auto\" + i + "x" + i;
+                AutoTest(bw, path);
+            }
         }
 
         public void AutoTest(BackgroundWorker bw, string path)
@@ -154,7 +186,7 @@ namespace HandwrittingRecognition
             bool linearDelta = false;
             for (int x = 0; x < 2; x++) //to test with different delta functions
             {
-                for (double deltaAtTheEnd = 0.0; deltaAtTheEnd < 0.5; deltaAtTheEnd += 0.2)
+                for (double deltaAtTheEnd = 0.0; deltaAtTheEnd < 0.3; deltaAtTheEnd += 0.2)
                 {
                     string deltaFunc;
                     if (linearDelta)
@@ -172,6 +204,6 @@ namespace HandwrittingRecognition
             learnAllAverage(100, bw);
             saveWeights(currenPath + ".txt");
             LearningProcedures.saveGuess(guessAll(100, bw), currenPath);
-        } 
+        }
     }
 }

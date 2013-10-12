@@ -7,7 +7,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Drawing;
 
-namespace LinearBinaryPattern
+namespace HandwrittingRecognition
 {
     class LearningProcedures
     {

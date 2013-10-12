@@ -8,7 +8,7 @@ using System.IO;
 using System.Windows.Forms;
 using System.ComponentModel;
 
-namespace LinearBinaryPattern
+namespace HandwrittingRecognition
 {
     class CenterLearning
     {
