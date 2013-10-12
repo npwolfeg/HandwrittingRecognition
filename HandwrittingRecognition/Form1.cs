@@ -32,7 +32,7 @@ namespace LinearBinaryPattern
         //string path = @"F:\C#\MNIST Reader\MNIST Reader\bin\Debug\";
         string path = @"F:\C#\NumberPicturesSaver\NumberPicturesSaver\bin\Debug\";
         Point[] points = new Point[2];
-        CenterLearning learner = new CenterLearning();
+        SimpleLearning learner = new SimpleLearning();
 
         public void clearWideHistograms()
         {

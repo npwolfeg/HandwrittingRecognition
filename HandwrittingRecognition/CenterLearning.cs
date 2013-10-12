@@ -21,9 +21,11 @@ namespace LinearBinaryPattern
         public int optionsCount = 10;
         public int vectorLength;
         public double[][] weights;
+        LearningProcedures.getVector handler;
 
         public CenterLearning()
         {
+            handler = getVector;
             initialize(16,16);
         }
 
@@ -76,32 +78,6 @@ namespace LinearBinaryPattern
             }
         }
 
-        public void learnAllKohonen(int learningCount, BackgroundWorker bw, bool linearDelta, double deltaAtTheEnd)
-        {
-            LearningProcedures l = new LearningProcedures(this);
-                weights = l.learnAll(learningCount, bw, linearDelta, deltaAtTheEnd);
-        }
-
-        public void learnAllAverage(int learningCount, BackgroundWorker bw)
-        {
-            LearningProcedures l = new LearningProcedures(this);
-            weights = l.learnAllAverage(learningCount, bw);
-        }
-        public int[,] guessAll(int guessingCount , BackgroundWorker bw)
-        {
-            LearningProcedures l = new LearningProcedures(this);
-            return l.guessAll(guessingCount, bw);
-        }
-
-        public void AutoTest(BackgroundWorker bw)
-        {
-            int i = 16;
-                initialize(i, i);
-                string path = @"F:\C#\HandwrittingRecognition\HandwrittingRecognition\bin\Debug\weights\Center\auto\"+i+"x"+i;
-                LearningProcedures l = new LearningProcedures(this);
-                l.AutoTest(bw, path);
-        }
-
         public void loadWeights()
         {
             OpenFileDialog of = new OpenFileDialog();
@@ -109,6 +85,57 @@ namespace LinearBinaryPattern
             {
                 loadWeights(of.FileName);
             }
+        }
+
+        public void learnAllKohonen(int learningCount, BackgroundWorker bw, bool linearDelta, double deltaAtTheEnd)
+        {
+            LearningProcedures l = new LearningProcedures();            
+                weights = l.learnAll(learningCount, bw, linearDelta, deltaAtTheEnd,optionsCount,vectorLength,handler);
+        }
+
+        public void learnAllAverage(int learningCount, BackgroundWorker bw)
+        {
+            LearningProcedures l = new LearningProcedures();
+            weights = l.learnAllAverage(learningCount, bw,optionsCount,vectorLength,handler);
+        }
+        public int[,] guessAll(int guessingCount , BackgroundWorker bw)
+        {
+            LearningProcedures l = new LearningProcedures();
+            return l.guessAll(weights,guessingCount, bw,optionsCount,vectorLength,handler);
+        }
+
+        public void AutoTest(BackgroundWorker bw)
+        {
+            int i = 10;
+                initialize(i, i);
+                string path = @"F:\C#\HandwrittingRecognition\HandwrittingRecognition\bin\Debug\weights\" + this.GetType().Name + @"\auto\"+i+"x"+i;
+                AutoTest(bw, path);
+        }
+
+        public void AutoTest(BackgroundWorker bw, string path)
+        {
+            string currenPath;
+            bool linearDelta = false;
+            for (int x = 0; x < 2; x++) //to test with different delta functions
+            {
+                for (double deltaAtTheEnd = 0.0; deltaAtTheEnd < 0.5; deltaAtTheEnd += 0.2)
+                {
+                    string deltaFunc;
+                    if (linearDelta)
+                        deltaFunc = " linearDelta ";
+                    else
+                        deltaFunc = " nonLinearDelta ";
+                    currenPath = path + "kohonen" + deltaFunc + deltaAtTheEnd.ToString();
+                    learnAllKohonen(100, bw, linearDelta, deltaAtTheEnd);
+                    saveWeights(currenPath + ".txt");
+                    LearningProcedures.saveGuess(guessAll(100, bw), currenPath);
+                }
+                linearDelta = true;
+            }
+            currenPath = path + "average ";
+            learnAllAverage(100, bw);
+            saveWeights(currenPath + ".txt");
+            LearningProcedures.saveGuess(guessAll(100, bw), currenPath);
         }
 
         public Bitmap visualize()
@@ -122,10 +149,10 @@ namespace LinearBinaryPattern
                     for (int i = 0; i < blockCols; i++)
                         for (int j = 0; j < blockRows; j++)
                         {
-                            //g.DrawRectangle(new Pen(Color.Blue, 4), n * picWidth + i * blockWidth, j * blockHeight, blockWidth, blockHeight);
+                            g.DrawRectangle(new Pen(Color.Blue, 4), n * picWidth + i * blockWidth, j * blockHeight, blockWidth, blockHeight);
                             g.DrawRectangle(new Pen(Color.Orange, 4), new Rectangle(n * picWidth + i * blockWidth + (int)weights[n][counter], j * blockHeight + (int)weights[n][counter+1], 1, 1));
-                            //g.DrawLine(new Pen(Color.Black, 1), n * picWidth + i * blockWidth + blockWidth / 2, j * blockHeight, n * picWidth + i * blockWidth + blockWidth / 2, (j + 1) * blockHeight);
-                            //g.DrawLine(new Pen(Color.Black, 1), n * picWidth + i * blockWidth, j * blockHeight + blockHeight/2, n * picWidth + (i+1) * blockWidth, j * blockHeight + blockHeight/2);
+                            g.DrawLine(new Pen(Color.Black, 1), n * picWidth + i * blockWidth + blockWidth / 2, j * blockHeight, n * picWidth + i * blockWidth + blockWidth / 2, (j + 1) * blockHeight);
+                            g.DrawLine(new Pen(Color.Black, 1), n * picWidth + i * blockWidth, j * blockHeight + blockHeight/2, n * picWidth + (i+1) * blockWidth, j * blockHeight + blockHeight/2);
                             counter++;
                         }
                 }

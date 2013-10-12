@@ -11,12 +11,11 @@ namespace LinearBinaryPattern
 {
     class LearningProcedures
     {
-        string path = @"F:\DigitDB\PictureSaver\";        
-        CenterLearning learner;        
+        string path = @"F:\DigitDB\PictureSaver\";
+        public delegate double[] getVector(Bitmap bmp);     
 
-        public LearningProcedures(CenterLearning learner)
+        public LearningProcedures()
         {
-            this.learner = learner;
         }
 
         static public List<double> guess(double[] vector, int optionsCount, double[][]weights)
@@ -28,7 +27,7 @@ namespace LinearBinaryPattern
             return dist;
         }
 
-        public double[][] learnKohonen(double[] vector, int n, double[][] weights, int optionsCount, double delta)
+        static public double[][] learnKohonen(double[] vector, int n, double[][] weights, int optionsCount, double delta)
         {
             List<double> arr = guess(vector,optionsCount,weights);
             int id = arr.IndexOf(arr.Min());
@@ -45,11 +44,9 @@ namespace LinearBinaryPattern
             return weights;
         }
 
-        public double[][] learnAll(int learningCount, BackgroundWorker bw, bool linearDelta, double deltaAtTheEnd)
+        public double[][] learnAll(int learningCount, BackgroundWorker bw, bool linearDelta, double deltaAtTheEnd, int optionsCount, int vectorLength,getVector gv)
         {
             double delta = 1;
-            int optionsCount = learner.optionsCount;
-            int vectorLength = learner.vectorLength;
             double[][] weights;
             weights = new double[optionsCount][];
             for (int n = 0; n < optionsCount; n++)
@@ -77,7 +74,7 @@ namespace LinearBinaryPattern
                     bmp = new Bitmap(path + k.ToString() + n.ToString() + ".bmp");
                     bmp = BmpProcesser.FromAlphaToRGB(bmp);
                     bmp = BmpProcesser.normalizeBitmapRChannel(bmp, 100, 100);
-                    learnKohonen(learner.getVector(bmp), k, weights, optionsCount,delta);
+                    learnKohonen(gv(bmp), k, weights, optionsCount,delta);
                 }
                 if (deltaAtTheEnd >= 1)
                     deltaAtTheEnd = 0.99;
@@ -96,10 +93,8 @@ namespace LinearBinaryPattern
             return weights;
         }
 
-        public double[][] learnAllAverage(int learningCount, BackgroundWorker bw)
+        public double[][] learnAllAverage(int learningCount, BackgroundWorker bw, int optionsCount, int vectorLength, getVector gv)
         {
-            int optionsCount = learner.optionsCount;
-            int vectorLength = learner.vectorLength;
             double[][] weights;
             weights = new double[optionsCount][];
             for (int n = 0; n < optionsCount; n++)
@@ -129,7 +124,7 @@ namespace LinearBinaryPattern
                     bmp = new Bitmap(path + k.ToString() + n.ToString() + ".bmp");
                     bmp = BmpProcesser.FromAlphaToRGB(bmp);
                     bmp = BmpProcesser.normalizeBitmapRChannel(bmp, 100, 100);
-                    vector1 = learner.getVector(bmp);
+                    vector1 = gv(bmp);
                     for (int i = 0; i < vectorLength; i++)
                         weights[k][i] += vector1[i];
                 }
@@ -140,10 +135,8 @@ namespace LinearBinaryPattern
             return weights;
         }
 
-        public int[,] guessAll(int guessingCount, BackgroundWorker bw)
+        public int[,] guessAll(double[][]weights, int guessingCount, BackgroundWorker bw, int optionsCount, int vectorLength, getVector gv)
         {
-            int optionsCount = learner.optionsCount;
-            int vectorLength = learner.vectorLength;
             int progress, maxProgress;            
             progress = 0;
             maxProgress = guessingCount * optionsCount;
@@ -166,7 +159,7 @@ namespace LinearBinaryPattern
                     bmp = new Bitmap(path + k.ToString() + n.ToString() + ".bmp");
                     bmp = BmpProcesser.FromAlphaToRGB(bmp);
                     bmp = BmpProcesser.normalizeBitmapRChannel(bmp, 100, 100);
-                    arr = learner.guess(bmp);
+                    arr = guess(gv(bmp),optionsCount,weights);
                     ID = arr.IndexOf(arr.Min());
                     if (ID == k)
                         result[k, 0]++;
@@ -177,7 +170,7 @@ namespace LinearBinaryPattern
             return result;
         }
 
-        private void saveGuess(int[,] rightNwrong, string currenPath)
+        static public void saveGuess(int[,] rightNwrong, string currenPath)
         {
             int sum = 0;
             currenPath += " resut = ";
@@ -192,32 +185,6 @@ namespace LinearBinaryPattern
             }
             File.Delete(currenPath + sum + ".txt");
             File.Move(currenPath + ".txt", currenPath + sum + ".txt");
-        }
-
-        public void AutoTest(BackgroundWorker bw, string path)
-        {
-            string currenPath;
-            bool linearDelta = false;
-            for (int x = 0; x < 2; x++) //to test with different delta functions
-            {
-                for (double deltaAtTheEnd = 0.1; deltaAtTheEnd < 0.5; deltaAtTheEnd += 0.1)
-                {
-                    string deltaFunc;
-                    if (linearDelta)
-                        deltaFunc = " linearDelta ";
-                    else
-                        deltaFunc = " nonLinearDelta ";
-                    currenPath = path + "kohonen" + deltaFunc + deltaAtTheEnd.ToString();
-                    learner.learnAllKohonen(100, bw, linearDelta, deltaAtTheEnd);
-                    learner.saveWeights(currenPath + ".txt");                    
-                    saveGuess(learner.guessAll(100, bw),currenPath);
-                }
-                linearDelta = true;
-            }
-            currenPath = path + "average ";
-            learner.learnAllAverage(100, bw);
-            learner.saveWeights(currenPath + ".txt");
-            saveGuess(learner.guessAll(100, bw), currenPath);
         }
     }
 }
