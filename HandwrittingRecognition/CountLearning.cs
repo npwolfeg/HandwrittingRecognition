@@ -10,7 +10,7 @@ using System.ComponentModel;
 
 namespace HandwrittingRecognition
 {
-    class CenterLearning
+    class CountLearning
     {
         int blockRows = 16;
         int blockCols = 16;
@@ -23,7 +23,7 @@ namespace HandwrittingRecognition
         public double[][] weights;
         LearningProcedures.getVector handler;
 
-        public CenterLearning()
+        public CountLearning()
         {
             handler = getVector;
             initialize(16,16);
@@ -34,7 +34,7 @@ namespace HandwrittingRecognition
             this.blockCols = blockCols;
             this.blockRows = blockRows;
             weights = new double[optionsCount][];
-            vectorLength = 2 * blockRows * blockCols;
+            vectorLength = blockRows * blockCols;
             blockWidth = picWidth / blockCols;
             blockHeight = picHeight / blockRows;
             for (int n = 0; n < optionsCount; n++)
@@ -106,10 +106,12 @@ namespace HandwrittingRecognition
 
         public void AutoTest(BackgroundWorker bw)
         {
-            int i = 10;
+            for (int i = 8; i <= 16; i*=2)
+            {
                 initialize(i, i);
-                string path = @"F:\C#\HandwrittingRecognition\HandwrittingRecognition\bin\Debug\weights\" + this.GetType().Name + @"\auto\"+i+"x"+i;
+                string path = @"F:\C#\HandwrittingRecognition\HandwrittingRecognition\bin\Debug\weights\" + this.GetType().Name + @"\auto\" + i + "x" + i;
                 AutoTest(bw, path);
+            }
         }
 
         public void AutoTest(BackgroundWorker bw, string path)
@@ -159,28 +161,13 @@ namespace HandwrittingRecognition
             return result;
         }
 
-        double[] Center(Bitmap bmp)
+        double[] CountPixels(Bitmap bmp)
         {
-            int counter = 0;
-            double[] result = new double[2];
+            double[] result = new double[1];
             for (int i=0;i<bmp.Width;i++)
                 for(int j=0;j<bmp.Height;j++)
                     if (bmp.GetPixel(i, j).R < 255)
-                    {
-                        counter++;
-                        result[0] += i;
-                        result[1] += j;
-                    }
-            if (counter != 0)
-            {
-                result[0] = result[0] / counter;
-                result[1] = result[1] / counter;
-            }
-            else
-            {
-                result[0] = blockWidth / 2;
-                result[1] = blockHeight / 2;
-            }
+                        result[0] += i;           
             return result;
         }
 
@@ -195,9 +182,8 @@ namespace HandwrittingRecognition
                 {
                     copyRect = new Rectangle(i * blockWidth, j * blockHeight, blockWidth, blockHeight);
                     Bitmap partOfBmp = BmpProcesser.copyPartOfBitmap(bmp, copyRect);
-                    double[] currentCenter = Center(partOfBmp);
-                    result[counter] = currentCenter[0];
-                    result[counter + 1] = currentCenter[1];
+                    double[] currentCount = CountPixels(partOfBmp);
+                    result[counter] = currentCount[0];
                     counter++;
                 }
             return result;

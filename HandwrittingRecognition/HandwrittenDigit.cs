@@ -11,17 +11,27 @@ namespace HandwrittingRecognition
     {
         public Rectangle bounds;
         public HashSet<Point> points;
-        public List<int> possiebleDigits;
+        private double[] digitVotes = new double[10];
 
         public HandwrittenDigit()
         {
         }
 
-        public HandwrittenDigit(Rectangle bounds, HashSet<Point> points, List<int> possiebleDigits)
+        public HandwrittenDigit(Rectangle bounds, HashSet<Point> points)
         {
             this.bounds = bounds;
             this.points = points;
-            this.possiebleDigits = possiebleDigits;
+        }
+
+        public void addGuess(List<double> dist)
+        {
+            for (int i = 0; i < dist.Count(); i++)
+                digitVotes[i] += dist[i];
+        }
+
+        public int digitWithMaxVotes()
+        {
+            return digitVotes.ToList().IndexOf(digitVotes.Min());
         }
     }
 }

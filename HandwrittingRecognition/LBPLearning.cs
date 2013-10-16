@@ -23,7 +23,6 @@ namespace HandwrittingRecognition
         static int picHeight = 100;
         int blockWidth;
         int blockHeight;
-        //double[, ,][] wideHistograms = new double[10, blockCols, blockRows][];
         public double[][] weights;
         LearningProcedures.getVector handler;
 
