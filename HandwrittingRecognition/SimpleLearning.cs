@@ -16,10 +16,12 @@ namespace HandwrittingRecognition
         public double[][] weights = new double[optionsCount][];
         string path = @"F:\DigitDB\PictureSaver\";
         LearningProcedures.getVector handler;
+        Saver.getVectorLength vectorLengthHandler;
 
         public SimpleLearning()
         {
             handler = getVector;
+            vectorLengthHandler = getVectorLength;
             initialize(127);
         }
 
@@ -31,6 +33,11 @@ namespace HandwrittingRecognition
                 for (int i = 0; i < vectorLength; i++)
                         weights[n][i] = defaultWeight;
                 }
+        }
+
+        public int getVectorLength(List<double> parameters)
+        {
+            return vectorLength;
         }
 
         private void randomInitialize()
@@ -46,12 +53,8 @@ namespace HandwrittingRecognition
 
         public void saveWeights(string path)
         {
-            using (StreamWriter sw = new StreamWriter(path))
-            {
-                for (int n = 0; n < optionsCount; n++)
-                    for (int i = 0; i < vectorLength; i++)
-                            sw.WriteLine(weights[n][i].ToString());
-            }
+            LearnerData LD = new LearnerData(optionsCount,vectorLength);
+            Saver.saveWeights(path, LD, optionsCount, vectorLength);
         }
 
         public void saveWeights()
@@ -65,12 +68,8 @@ namespace HandwrittingRecognition
 
         public void loadWeights(string path)
         {
-            using (StreamReader sw = new StreamReader(path))
-            {
-                for (int n = 0; n < optionsCount; n++)
-                    for (int i = 0; i < vectorLength; i++)
-                            weights[n][i] = Convert.ToDouble(sw.ReadLine());
-            }
+            LearnerData LD = Saver.loadWeights(path, 0, optionsCount, vectorLengthHandler);
+            weights = LD.weights;
         }
 
         public void loadWeights()

@@ -22,10 +22,12 @@ namespace HandwrittingRecognition
         public int vectorLength;
         public double[][] weights;
         LearningProcedures.getVector handler;
+        Saver.getVectorLength vectorLengthHandler;
 
         public CenterLearning()
         {
             handler = getVector;
+            vectorLengthHandler = getVectorLength;
             initialize(16,16);
         }
 
@@ -45,18 +47,16 @@ namespace HandwrittingRecognition
             }
         }
 
+        public int getVectorLength(List<double> parameters)
+        {
+            return (int) (2 * parameters[0] * parameters[1]);
+        }
+
         public void saveWeights(string path)
         {
-            File.Delete(path);
-            using (StreamWriter sw = new StreamWriter(path))
-            {
-                sw.WriteLine(blockCols.ToString());
-                sw.WriteLine(blockRows.ToString());
-                for (int n = 0; n < optionsCount; n++)
-                    for (int i = 0; i < vectorLength; i++)
-                        sw.WriteLine(weights[n][i].ToString());
-            }
-        }        
+            LearnerData LD = new LearnerData(blockCols, blockRows, weights);
+            Saver.saveWeights(path, LD, optionsCount, vectorLength);
+        }
         
         public void saveWeights()
         {
@@ -69,13 +69,9 @@ namespace HandwrittingRecognition
 
         public void loadWeights(string path)
         {
-            using (StreamReader sw = new StreamReader(path))
-            {
-                initialize(Convert.ToInt32(sw.ReadLine()), Convert.ToInt32(sw.ReadLine()));
-                for (int n = 0; n < optionsCount; n++)
-                    for (int i = 0; i < vectorLength; i++)
-                    weights[n][i] = Convert.ToDouble(sw.ReadLine());
-            }
+            LearnerData LD = Saver.loadWeights(path, 2, optionsCount, vectorLengthHandler);
+            initialize((int)LD.parameters[0], (int)LD.parameters[1]);
+            weights = LD.weights;
         }
 
         public void loadWeights()
