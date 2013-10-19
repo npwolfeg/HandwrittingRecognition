@@ -12,7 +12,7 @@ namespace HandwrittingRecognition
     class LearningProcedures
     {
         string path = @"F:\DigitDB\PictureSaver\";
-        public delegate double[] getVector(Bitmap bmp);     
+        public delegate double[] getVector(Bitmap bmp);        
 
         public LearningProcedures()
         {
@@ -21,15 +21,26 @@ namespace HandwrittingRecognition
         static public List<double> guess(double[] vector, int optionsCount, double[][]weights)
         {
             List<double> dist = new List<double>();
-            for (int n = 0; n < optionsCount; n++)
-                dist.Add(Distances.EuclidDistance(vector, weights[n]));
-            dist = Vector.normalyzeVektor(dist);
+            for (int n = 0; n < optionsCount; n++) 
+                dist.Add(Distances.Distance(vector, weights[n]));
+            dist = Vector.normalyzeVektor(dist,100);
             return dist;
         }
 
+        /*static public List<double> guessKullbackLeiblerDistance(double[] vector, int optionsCount, double[][] weights)
+        {
+            List<double> dist = new List<double>();
+            for (int n = 0; n < optionsCount; n++)
+                //dist.Add(Distances.EuclidDistance(vector, weights[n]));   
+                dist.Add(Distances.KullbackLeiblerDistance(vector, weights[n]));
+            dist = Vector.normalyzeVektor(dist,100);
+            return dist;
+        }*/
+
         static public double[][] learnKohonen(double[] vector, int n, double[][] weights, int optionsCount, double delta)
         {
-            List<double> arr = guess(vector,optionsCount,weights);
+            List<double> arr = guess(vector,optionsCount,weights);  
+            //List<double> arr = guessKullbackLeiblerDistance(vector, optionsCount, weights);
             int id = arr.IndexOf(arr.Min());
             if (n != id)
                 for (int i = 0; i < vector.Length; i++)

@@ -102,10 +102,12 @@ namespace HandwrittingRecognition
 
         public void AutoTest(BackgroundWorker bw)
         {
-            for (int i = 8; i <= 16; i*=2)
+            for (int i = 4; i <= 4; i*=2)
             {
                 initialize(i, i);
-                string path = @"F:\C#\HandwrittingRecognition\HandwrittingRecognition\bin\Debug\weights\" + this.GetType().Name + @"\auto\" + i + "x" + i;
+                string dir = @"F:\C#\HandwrittingRecognition\HandwrittingRecognition\bin\Debug\weights\" + this.GetType().Name + @"\auto\";
+                Directory.CreateDirectory(dir);
+                string path = dir + i + "x" + i;
                 AutoTest(bw, path);
             }
         }
@@ -113,10 +115,10 @@ namespace HandwrittingRecognition
         public void AutoTest(BackgroundWorker bw, string path)
         {
             string currenPath;
-            bool linearDelta = false;
-            for (int x = 0; x < 2; x++) //to test with different delta functions
+           /* bool linearDelta = false;
+            for (int x = 0; x < 1; x++) //to test with different delta functions
             {
-                for (double deltaAtTheEnd = 0.0; deltaAtTheEnd < 0.5; deltaAtTheEnd += 0.2)
+                for (double deltaAtTheEnd = 0.2; deltaAtTheEnd < 0.3; deltaAtTheEnd += 0.2)
                 {
                     string deltaFunc;
                     if (linearDelta)
@@ -129,7 +131,7 @@ namespace HandwrittingRecognition
                     LearningProcedures.saveGuess(guessAll(100, bw), currenPath);
                 }
                 linearDelta = true;
-            }
+            }*/
             currenPath = path + "average ";
             learnAllAverage(100, bw);
             saveWeights(currenPath + ".txt");
@@ -187,7 +189,7 @@ namespace HandwrittingRecognition
 
         public List<double> guess(Bitmap bmp)
         {
-            return LearningProcedures.guess(getVector(bmp),optionsCount,weights);
+            return LearningProcedures.guess(getVector(bmp), optionsCount, weights);
         } 
     }
 }

@@ -118,7 +118,7 @@ namespace HandwrittingRecognition
             for (int i = 0; i < bmp.Width; i++)
                 for (int j = 0; j < bmp.Height; j++)
                     result[analyzePixel(bmp, i, j)]++;
-            result = Vector.normalyzeVektor(result);
+            result = Vector.normalyzeVektor(result,1);
             return result;
         }
 

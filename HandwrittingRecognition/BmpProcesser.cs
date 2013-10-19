@@ -141,7 +141,7 @@ namespace HandwrittingRecognition
             else
                 cloneBitmap = sourceBMP.Clone(cloneRect, format);
             using (Graphics g = Graphics.FromImage(result))
-                g.DrawImage(cloneBitmap, 0, 0, width, height);
+                g.DrawImage(cloneBitmap, 0, 0, width-1, height-1);
             return result;
         }
 
@@ -196,6 +196,17 @@ namespace HandwrittingRecognition
                         result = false;
             }
             return result;
+        }
+
+        static public bool isAlpha(Bitmap bmp)
+        {
+            for (int i = 0; i < bmp.Width; i++)
+                for (int j = 0; j < bmp.Height; j++)
+                {
+                    if (bmp.GetPixel(i, j).A < 255)
+                        return true;
+                }
+            return false;
         }
 
         static public Bitmap FromAlphaToRGB(Bitmap bitmap)

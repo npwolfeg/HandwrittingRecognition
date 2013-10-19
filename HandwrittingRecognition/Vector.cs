@@ -8,39 +8,39 @@ namespace HandwrittingRecognition
 {
     class Vector
     {
-        public static double[] normalyzeVektor(double[] vektor)
+        public static double[] normalyzeVektor(double[] vektor, double max)
         {
             double sum = 0;
+
+            double min = vektor.Min();
+            for (int i = 0; i < vektor.Length; i++)
+                vektor[i] -= min;
             for (int i = 0; i < vektor.Length; i++)
                 sum += vektor[i];
             for (int i = 0; i < vektor.Length; i++)
+            {
                 vektor[i] = vektor[i] / sum;
+                vektor[i] = Math.Round(vektor[i], 3) * max;
+            }
             return vektor;
         }
 
-        public static List<double> normalyzeVektor(List<double> vektor)
+        public static List<double> normalyzeVektor(List<double> vektor, double max)
         {
-            double sum = 0;
-            for (int i = 0; i < vektor.Count; i++)
-                sum += vektor[i];
-            for (int i = 0; i < vektor.Count; i++)
-            {
-                vektor[i] = vektor[i] / sum;
-                vektor[i] = Math.Round(vektor[i], 3) * 100;
-            }
-            return vektor;
+            return normalyzeVektor(vektor.ToArray(), max).ToList();
         }
-        public static List<int> normalyzeVektor(List<int> vektor)
+
+        public static List<string> toSortedStringList(List<double> dist)
         {
-            double sum = 0;
-            for (int i = 0; i < vektor.Count; i++)
-                sum += vektor[i];
-            for (int i = 0; i < vektor.Count; i++)
+            List<string> result = new List<string>();
+            int ID;
+            for (int i = 0; i < 10; i++)
             {
-                double temp = vektor[i] / sum;
-                vektor[i] = (int) (Math.Round(temp, 4) * 100);
+                ID = dist.IndexOf(dist.Min());
+                result.Add(ID.ToString() + ' ' + dist[ID].ToString());
+                dist[ID] = 100000;
             }
-            return vektor;
+            return result;
         }
     }
 }

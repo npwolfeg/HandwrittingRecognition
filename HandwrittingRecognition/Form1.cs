@@ -12,27 +12,16 @@ using System.IO;
 
 namespace HandwrittingRecognition
 {
+
     public partial class Form1 : Form
     {
         bool canDraw = false;
         Bitmap drawingBitmap, bigBitmap;
         int drawingWidth = 10;
-        /*int pointsCount = 8;
-        int radius = 2;
-        static int blockRows = 4;
-        static int blockCols = 4;
-        static int picWidth = 100;
-        static int picHeight = 100;
-        static int blockWidth = picWidth / blockCols;
-        static int blockHeight = picHeight / blockRows;*/
-        //double[, ,][] wideHistograms = new double[10, blockCols, blockRows][];
-        //int[] histogramCount = new int[10];
-        //byte[] uniformPatterns = new byte[57];
         int[] count = new int[10];
-        //string path = @"F:\C#\MNIST Reader\MNIST Reader\bin\Debug\";
-        string path = @"F:\C#\NumberPicturesSaver\NumberPicturesSaver\bin\Debug\";
         Point[] points = new Point[2];
-        SimpleLearning learner = new SimpleLearning();
+        CountLearning learner = new CountLearning();
+        DistanceType distanceType = DistanceType.Euclid;
 
         public void clearImg()
         {
@@ -77,7 +66,9 @@ namespace HandwrittingRecognition
             drawingBitmap = new Bitmap(100, 100);
             pictureBox1.Image = drawingBitmap;
             bigBitmap = new Bitmap(pictureBox2.Width, pictureBox2.Height);
-            pictureBox2.Image = bigBitmap;           
+            pictureBox2.Image = bigBitmap;
+            distanceListBox.Items.Add("Euclid");
+            distanceListBox.Items.Add("KullbackLeibler");
         }
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
@@ -112,7 +103,8 @@ namespace HandwrittingRecognition
             /*drawingBitmap = new Bitmap(@"F:\DigitDB\PictureSaver\01.bmp");
             drawingBitmap = BmpProcesser.normalizeBitmapRChannel(drawingBitmap, 100, 100);
             pictureBox1.Image = drawingBitmap;*/
-            bigBitmap = new Bitmap("bigBitmapForTests.bmp");
+            bigBitmap = new Bitmap(@"Tests\bigBitmap" + textBox2.Text + ".bmp");
+            pictureBox2.Image = bigBitmap;            
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -161,7 +153,7 @@ namespace HandwrittingRecognition
                     for (int j = 0; j < drawingWidth; j++)
                         if (e.X + i > -1 && e.X + i < bigBitmap.Width && e.Y + j > -1 && e.Y + j < bigBitmap.Height)
                             bigBitmap.SetPixel(e.X + i, e.Y + j, Color.Black);
-                pictureBox2.Refresh();
+                pictureBox2.Image = bigBitmap;
             }
         }
 
@@ -181,15 +173,17 @@ namespace HandwrittingRecognition
             SLearner.loadWeights(@"weights\SimpleLearning\auto\defaultWeight127kohonen nonLinearDelta 0,2.txt");
             CountLearning CountLearner = new CountLearning();
             CountLearner.loadWeights(@"weights\CountLearning\Auto\16x16kohonen nonLinearDelta 0,2.txt");
-        
-            drawingBitmap = BmpProcesser.FromAlphaToRGB(drawingBitmap);
+
+            if (BmpProcesser.isAlpha(drawingBitmap))
+                drawingBitmap = BmpProcesser.FromAlphaToRGB(drawingBitmap);
             drawingBitmap = BmpProcesser.normalizeBitmapRChannel(drawingBitmap, 100, 100);
+            drawingBitmap = BmpProcesser.renewRChannel(drawingBitmap);
             listBox1.Items.Clear();
             pictureBox1.Image = drawingBitmap;
             int ID;
             List<double> dist;
 
-            dist = LBPLearner.guess(drawingBitmap); 
+            /*dist = LBPLearner.guess(drawingBitmap); 
             listBox1.Items.Add("LBP 4x4 kohonen");
             for (int i = 0; i < 10; i++)
             {
@@ -198,7 +192,7 @@ namespace HandwrittingRecognition
                 dist[ID] = 100000;
             }
 
-            dist = CLearner.guess(drawingBitmap);
+            /*dist = CLearner.guess(drawingBitmap);
             listBox1.Items.Add("Center 4x4 kohonen");
             for (int i = 0; i < 10; i++)
             {
@@ -216,10 +210,10 @@ namespace HandwrittingRecognition
                 ID = dist.IndexOf(dist.Min());
                 listBox1.Items.Add(ID.ToString() + ' ' + dist[ID].ToString());
                 dist[ID] = 100000;
-            }
+            }*/
 
 
-            dist = SLearner.guess(drawingBitmap);
+            /*dist = SLearner.guess(drawingBitmap);
             listBox1.Items.Add("Simple kohonen");
             for (int i = 0; i < 10; i++)
             {
@@ -228,8 +222,46 @@ namespace HandwrittingRecognition
                 dist[ID] = 100000;
             }
 
-            dist = CountLearner.guess(drawingBitmap);
+            dist = SLearner.guessKullbackLeiblerDistance (drawingBitmap);
+            listBox1.Items.Add("Simple kohonen");
+            for (int i = 0; i < 10; i++)
+            {
+                ID = dist.IndexOf(dist.Min());
+                listBox1.Items.Add(ID.ToString() + ' ' + dist[ID].ToString());
+                dist[ID] = 100000;
+            }*/
+
+            /*dist = CountLearner.guess(drawingBitmap);
             listBox1.Items.Add("count 16x16 kohonen");
+            for (int i = 0; i < 10; i++)
+            {
+                ID = dist.IndexOf(dist.Min());
+                listBox1.Items.Add(ID.ToString() + ' ' + dist[ID].ToString());
+                dist[ID] = 100000;
+            }*/
+
+            /*dist = CountLearner.guess(drawingBitmap);
+            listBox1.Items.Add("count 16x16 kohonen");
+            for (int i = 0; i < 10; i++)
+            {
+                ID = dist.IndexOf(dist.Min());
+                listBox1.Items.Add(ID.ToString() + ' ' + dist[ID].ToString());
+                dist[ID] = 100000;
+            }*/
+
+            
+
+            CountLearner.loadWeights(@"weights\CountLearning\Auto\4x4kohonen nonLinearDelta 0,2.txt");
+
+            List<string> stringDist = Vector.toSortedStringList(CountLearner.guess(drawingBitmap));
+            listBox1.Items.Add("count 4x4 kohonen");
+            foreach(string st in stringDist)
+                listBox1.Items.Add(st);
+
+            CountLearner.loadWeights(@"weights\CountLearning\AutoKBDistance\4x4kohonen nonLinearDelta 0,2.txt");
+
+            dist = CountLearner.guess(drawingBitmap);
+            listBox1.Items.Add("count 4x4 kohonen");
             for (int i = 0; i < 10; i++)
             {
                 ID = dist.IndexOf(dist.Min());
@@ -237,7 +269,16 @@ namespace HandwrittingRecognition
                 dist[ID] = 100000;
             }
 
-            LBPLearner.loadWeights(@"weights\LBPLearning\auto\4x4average .txt");
+            /*dist = CountLearner.guessKullbackLeiblerDistance(drawingBitmap);
+            listBox1.Items.Add("count 4x4 kohonen");
+            for (int i = 0; i < 10; i++)
+            {
+                ID = dist.IndexOf(dist.Min());
+                listBox1.Items.Add(ID.ToString() + ' ' + dist[ID].ToString());
+                dist[ID] = 100000;
+            }*/
+
+            /*LBPLearner.loadWeights(@"weights\LBPLearning\auto\4x4average .txt");
             CLearner.loadWeights(@"weights\CenterLearning\auto\16x16average .txt");
             SLearner.loadWeights(@"weights\SimpleLearning\auto\defaultWeight127average .txt");
             CountLearner.loadWeights(@"weights\CountLearning\Auto\16x16average .txt");
@@ -276,12 +317,25 @@ namespace HandwrittingRecognition
                 ID = dist.IndexOf(dist.Min());
                 listBox1.Items.Add(ID.ToString() + ' ' + dist[ID].ToString());
                 dist[ID] = 100000;
-            }
+            }*/
 
         }
 
         private void button17_Click(object sender, EventArgs e)
         {
+            //save bigBitmap to tests directory
+            int count;
+            using (StreamReader sw = new StreamReader(@"Tests\count.txt"))
+            {
+                count = Convert.ToInt32(sw.ReadLine());
+            }
+            bigBitmap.Save(@"Tests\bigBitmap" + count.ToString() + ".bmp");
+            count++;
+            using (StreamWriter sw = new StreamWriter(@"Tests\count.txt"))
+            {
+                sw.Write(count);
+            }
+
             LBPLearning LBPLearner = new LBPLearning();
             LBPLearner.loadWeights(@"weights\LBPLearning\auto\4x4kohonen nonLinearDelta 0,2.txt");
             CenterLearning CLearner = new CenterLearning();
@@ -289,7 +343,7 @@ namespace HandwrittingRecognition
             SimpleLearning SLearner = new SimpleLearning();
             SLearner.loadWeights(@"weights\SimpleLearning\auto\defaultWeight127kohonen nonLinearDelta 0,2.txt");
             CountLearning CountLearner = new CountLearning();
-            CountLearner.loadWeights(@"weights\CountLearning\Auto\16x16kohonen nonLinearDelta 0,2.txt");
+            CountLearner.loadWeights(@"weights\CountLearning\Auto\4x4kohonen nonLinearDelta 0,2.txt");
             
 
             //find digits in the bitmap
@@ -338,9 +392,9 @@ namespace HandwrittingRecognition
                         digits.Last().addGuess(dist);
 
                         LBPLearner.loadWeights(@"weights\LBPLearning\auto\4x4average .txt");
-                        CLearner.loadWeights(@"weights\CenterLearning\auto\16x16average .txt");
+                        CLearner.loadWeights(@"weights\CenterLearning\auto\4x4average .txt");
                         SLearner.loadWeights(@"weights\SimpleLearning\auto\defaultWeight127average .txt");
-                        CountLearner.loadWeights(@"weights\CountLearning\Auto\16x16average .txt");
+                        CountLearner.loadWeights(@"weights\CountLearning\Auto\4x4average .txt");
 
                         dist = LBPLearner.guess(drawingBitmap);
                         digits.Last().addGuess(dist);
@@ -356,6 +410,7 @@ namespace HandwrittingRecognition
                     }
                 }
             //gather digits into numbers and display them on top ot fte first digit in number
+            newBigBitmap = new Bitmap(bigBitmap);
             List<List<int>> numbers = DigitsToNumbersLogic.digitsToNumbers(digits);
             foreach (List<int> number in numbers)
             {
@@ -364,7 +419,7 @@ namespace HandwrittingRecognition
                 int top = digits[number[0]].bounds.Top;
                 foreach (int digit in number)
                 {
-                    using (Graphics g = Graphics.FromImage(bigBitmap))
+                    using (Graphics g = Graphics.FromImage(newBigBitmap))
                     {
                         g.DrawString(digits[digit].digitWithMaxVotes().ToString(), new Font("Arial", 20), new SolidBrush(Color.Red), left + counter * 20, top - 30);
                         //g.DrawString(digits[digit].possiebleDigits[1].ToString(), new Font("Arial", 20), new SolidBrush(Color.Orange), left + counter * 20, top - 50);
@@ -374,7 +429,7 @@ namespace HandwrittingRecognition
                     counter++;
                 }
             }
-            pictureBox2.Image = bigBitmap;
+            pictureBox2.Image = newBigBitmap;
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -411,23 +466,14 @@ namespace HandwrittingRecognition
             bw.RunWorkerAsync(count);
         }
 
-        private void pictureBox2_MouseClick(object sender, MouseEventArgs e)
+        private void distanceListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
-            {
-                int count;
-                using (StreamReader sw = new StreamReader(@"Tests\count.txt"))
-                {
-                    count = Convert.ToInt32(sw.ReadLine());
-                }
+            Distances.DT = (DistanceType)distanceListBox.SelectedIndex;
+        }
 
-                bigBitmap.Save(@"Tests\bigBitmap"+count.ToString()+".bmp");
-                count++;
-                using (StreamWriter sw = new StreamWriter(@"Tests\count.txt"))
-                {
-                    sw.Write(count);
-                }
-            }
+        private void button3_Click(object sender, EventArgs e)
+        {
+            textBox2.Text = (Convert.ToInt32(textBox2.Text) + 1).ToString();
         }
     }
 
