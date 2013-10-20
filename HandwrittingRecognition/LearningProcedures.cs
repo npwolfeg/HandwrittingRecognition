@@ -9,14 +9,11 @@ using System.Drawing;
 
 namespace HandwrittingRecognition
 {
-    class LearningProcedures
-    {
-        string path = @"F:\DigitDB\PictureSaver\";
-        public delegate double[] getVector(Bitmap bmp);        
+    public delegate double[] getVector(Bitmap bmp); 
 
-        public LearningProcedures()
-        {
-        }
+    static class LearningProcedures
+    {
+        static string path = @"F:\DigitDB\PictureSaver\";   
 
         static public List<double> guess(double[] vector, int optionsCount, double[][]weights)
         {
@@ -26,16 +23,6 @@ namespace HandwrittingRecognition
             dist = Vector.normalyzeVektor(dist,100);
             return dist;
         }
-
-        /*static public List<double> guessKullbackLeiblerDistance(double[] vector, int optionsCount, double[][] weights)
-        {
-            List<double> dist = new List<double>();
-            for (int n = 0; n < optionsCount; n++)
-                //dist.Add(Distances.EuclidDistance(vector, weights[n]));   
-                dist.Add(Distances.KullbackLeiblerDistance(vector, weights[n]));
-            dist = Vector.normalyzeVektor(dist,100);
-            return dist;
-        }*/
 
         static public double[][] learnKohonen(double[] vector, int n, double[][] weights, int optionsCount, double delta)
         {
@@ -55,7 +42,7 @@ namespace HandwrittingRecognition
             return weights;
         }
 
-        public double[][] learnAll(int learningCount, BackgroundWorker bw, bool linearDelta, double deltaAtTheEnd, int optionsCount, int vectorLength,getVector gv)
+        public static double[][] learnAll(int learningCount, BackgroundWorker bw, bool linearDelta, double deltaAtTheEnd, int optionsCount, int vectorLength,getVector gv)
         {
             double delta = 1;
             double[][] weights;
@@ -104,7 +91,7 @@ namespace HandwrittingRecognition
             return weights;
         }
 
-        public double[][] learnAllAverage(int learningCount, BackgroundWorker bw, int optionsCount, int vectorLength, getVector gv)
+        public static double[][] learnAllAverage(int learningCount, BackgroundWorker bw, int optionsCount, int vectorLength, getVector gv)
         {
             double[][] weights;
             weights = new double[optionsCount][];
@@ -146,7 +133,7 @@ namespace HandwrittingRecognition
             return weights;
         }
 
-        public int[,] guessAll(double[][]weights, int guessingCount, BackgroundWorker bw, int optionsCount, int vectorLength, getVector gv)
+        public static int[,] guessAll(double[][]weights, int guessingCount, BackgroundWorker bw, int optionsCount, int vectorLength, getVector gv)
         {
             int progress, maxProgress;            
             progress = 0;

@@ -20,7 +20,7 @@ namespace HandwrittingRecognition
         int drawingWidth = 10;
         int[] count = new int[10];
         Point[] points = new Point[2];
-        CountLearning learner = new CountLearning();
+        CountLearning learner = new CountLearning(false);
         DistanceType distanceType = DistanceType.Euclid;
 
         public void clearImg()
@@ -165,14 +165,14 @@ namespace HandwrittingRecognition
 
         private void button16_Click(object sender, EventArgs e)
         {
-            LBPLearning LBPLearner = new LBPLearning();
-            LBPLearner.loadWeights(@"weights\LBPLearning\auto\4x4kohonen nonLinearDelta 0,2.txt");
-            CenterLearning CLearner = new CenterLearning();
-            CLearner.loadWeights(@"weights\CenterLearning\auto\4x4kohonen nonLinearDelta 0,2.txt");
-            SimpleLearning SLearner = new SimpleLearning();
-            SLearner.loadWeights(@"weights\SimpleLearning\auto\defaultWeight127kohonen nonLinearDelta 0,2.txt");
-            CountLearning CountLearner = new CountLearning();
-            CountLearner.loadWeights(@"weights\CountLearning\Auto\16x16kohonen nonLinearDelta 0,2.txt");
+            LBPLearning LBPLearner = new LBPLearning(true);
+            //LBPLearner.loadWeights(@"weights\LBPLearning\auto\4x4kohonen nonLinearDelta 0,2.txt");
+            CenterLearning CLearner = new CenterLearning(true);
+            //CLearner.loadWeights(@"weights\CenterLearning\auto\4x4kohonen nonLinearDelta 0,2.txt");
+            SimpleLearning SLearner = new SimpleLearning(true);
+            //SLearner.loadWeights(@"weights\SimpleLearning\auto\defaultWeight127kohonen nonLinearDelta 0,2.txt");
+            CountLearning CountLearner = new CountLearning(true);
+            //CountLearner.loadWeights(@"weights\CountLearning\Auto\16x16kohonen nonLinearDelta 0,2.txt");
 
             if (BmpProcesser.isAlpha(drawingBitmap))
                 drawingBitmap = BmpProcesser.FromAlphaToRGB(drawingBitmap);
@@ -323,28 +323,10 @@ namespace HandwrittingRecognition
 
         private void button17_Click(object sender, EventArgs e)
         {
-            //save bigBitmap to tests directory
-            int count;
-            using (StreamReader sw = new StreamReader(@"Tests\count.txt"))
-            {
-                count = Convert.ToInt32(sw.ReadLine());
-            }
-            bigBitmap.Save(@"Tests\bigBitmap" + count.ToString() + ".bmp");
-            count++;
-            using (StreamWriter sw = new StreamWriter(@"Tests\count.txt"))
-            {
-                sw.Write(count);
-            }
-
-            LBPLearning LBPLearner = new LBPLearning();
-            LBPLearner.loadWeights(@"weights\LBPLearning\auto\4x4kohonen nonLinearDelta 0,2.txt");
-            CenterLearning CLearner = new CenterLearning();
-            CLearner.loadWeights(@"weights\CenterLearning\auto\4x4kohonen nonLinearDelta 0,2.txt");
-            SimpleLearning SLearner = new SimpleLearning();
-            SLearner.loadWeights(@"weights\SimpleLearning\auto\defaultWeight127kohonen nonLinearDelta 0,2.txt");
-            CountLearning CountLearner = new CountLearning();
-            CountLearner.loadWeights(@"weights\CountLearning\Auto\4x4kohonen nonLinearDelta 0,2.txt");
-            
+            LBPLearning LBPLearner = new LBPLearning(true);
+            CenterLearning CLearner = new CenterLearning(true);
+            SimpleLearning SLearner = new SimpleLearning(true);
+            CountLearning CountLearner = new CountLearning(true);            
 
             //find digits in the bitmap
             progressBar1.Value = 0;
@@ -391,10 +373,15 @@ namespace HandwrittingRecognition
                         dist = CountLearner.guess(drawingBitmap);
                         digits.Last().addGuess(dist);
 
-                        LBPLearner.loadWeights(@"weights\LBPLearning\auto\4x4average .txt");
+                        /*LBPLearner.loadWeights(@"weights\LBPLearning\auto\4x4average .txt");
                         CLearner.loadWeights(@"weights\CenterLearning\auto\4x4average .txt");
                         SLearner.loadWeights(@"weights\SimpleLearning\auto\defaultWeight127average .txt");
-                        CountLearner.loadWeights(@"weights\CountLearning\Auto\4x4average .txt");
+                        CountLearner.loadWeights(@"weights\CountLearning\Auto\4x4average .txt");*/
+
+                        LBPLearner.loadDefault(true);
+                        CLearner.loadDefault(true);
+                        SLearner.loadDefault(true);
+                        CountLearner.loadDefault(true);
 
                         dist = LBPLearner.guess(drawingBitmap);
                         digits.Last().addGuess(dist);

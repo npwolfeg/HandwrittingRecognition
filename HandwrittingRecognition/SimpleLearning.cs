@@ -15,14 +15,16 @@ namespace HandwrittingRecognition
         public int vectorLength = 100*100;
         public double[][] weights = new double[optionsCount][];
         string path = @"F:\DigitDB\PictureSaver\";
-        LearningProcedures.getVector handler;
+        getVector handler;
         Saver.getVectorLength vectorLengthHandler;
 
-        public SimpleLearning()
+        public SimpleLearning(bool load)
         {
             handler = getVector;
             vectorLengthHandler = getVectorLength;
             initialize(127);
+            if (load)
+                loadDefault(false);
         }
 
         private void initialize(int defaultWeight)
@@ -81,6 +83,14 @@ namespace HandwrittingRecognition
             }
         }
 
+        public void loadDefault(bool average)
+        {
+            if (average)
+                loadWeights(@"defaultWeights\CenterLearning\4x4average .txt");
+            else
+                loadWeights(@"defaultWeights\SimpleLearning\defaultWeight127kohonen nonLinearDelta 0,2.txt");
+        }
+
         public Bitmap visualize()
         {
             Bitmap result = new Bitmap(1000, 100);
@@ -121,19 +131,16 @@ namespace HandwrittingRecognition
 
         public void learnAllKohonen(int learningCount, BackgroundWorker bw, bool linearDelta, double deltaAtTheEnd)
         {
-            LearningProcedures l = new LearningProcedures();
-            weights = l.learnAll(learningCount, bw, linearDelta, deltaAtTheEnd, optionsCount, vectorLength, handler);
+            weights = LearningProcedures.learnAll(learningCount, bw, linearDelta, deltaAtTheEnd, optionsCount, vectorLength, handler);
         }
 
         public void learnAllAverage(int learningCount, BackgroundWorker bw)
         {
-            LearningProcedures l = new LearningProcedures();
-            weights = l.learnAllAverage(learningCount, bw, optionsCount, vectorLength, handler);
+            weights = LearningProcedures.learnAllAverage(learningCount, bw, optionsCount, vectorLength, handler);
         }
         public int[,] guessAll(int guessingCount, BackgroundWorker bw)
         {
-            LearningProcedures l = new LearningProcedures();
-            return l.guessAll(weights,guessingCount, bw,optionsCount,vectorLength,handler);
+            return LearningProcedures.guessAll(weights, guessingCount, bw, optionsCount, vectorLength, handler);
         }
 
         public void AutoTest(BackgroundWorker bw)
