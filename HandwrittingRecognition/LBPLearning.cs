@@ -10,7 +10,7 @@ using System.Drawing;
 
 namespace HandwrittingRecognition
 {
-    class LBPLearning
+    class LBPLearning : ILearner
     {
         public int optionsCount = 10;
         public int vectorLength;
@@ -93,9 +93,8 @@ namespace HandwrittingRecognition
         public void loadDefault(bool average)
         {
             if (average)
-                loadWeights(@"defaultWeights\CenterLearning\4x4average .txt");
+                loadWeights(@"defaultWeights\LBPLearning\4x4average .txt");
             else
-                loadWeights(@"defaultWeights\CenterLearning\4x4average .txt");
             loadWeights(@"defaultWeights\LBPLearning\4x4kohonen nonLinearDelta 0,2.txt");
         }
 

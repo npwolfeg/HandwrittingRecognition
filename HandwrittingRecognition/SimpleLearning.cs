@@ -9,12 +9,11 @@ using System.ComponentModel;
 
 namespace HandwrittingRecognition
 {
-    public class SimpleLearning
+    public class SimpleLearning : ILearner
     {
         static int optionsCount = 10;
         public int vectorLength = 100*100;
         public double[][] weights = new double[optionsCount][];
-        string path = @"F:\DigitDB\PictureSaver\";
         getVector handler;
         Saver.getVectorLength vectorLengthHandler;
 
@@ -86,7 +85,7 @@ namespace HandwrittingRecognition
         public void loadDefault(bool average)
         {
             if (average)
-                loadWeights(@"defaultWeights\CenterLearning\4x4average .txt");
+                loadWeights(@"defaultWeights\SimpleLearning\defaultWeight127average .txt");
             else
                 loadWeights(@"defaultWeights\SimpleLearning\defaultWeight127kohonen nonLinearDelta 0,2.txt");
         }

@@ -10,7 +10,7 @@ using System.ComponentModel;
 
 namespace HandwrittingRecognition
 {
-    class CenterLearning
+    class CenterLearning : ILearner
     {
         int blockRows = 16;
         int blockCols = 16;

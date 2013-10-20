@@ -10,7 +10,7 @@ using System.ComponentModel;
 
 namespace HandwrittingRecognition
 {
-    class CountLearning
+    class CountLearning : ILearner
     {
         int blockRows = 16;
         int blockCols = 16;
@@ -88,7 +88,7 @@ namespace HandwrittingRecognition
         public void loadDefault(bool average)
         {
             if (average)
-                loadWeights(@"defaultWeights\CenterLearning\4x4average .txt");
+                loadWeights(@"defaultWeights\CountLearning\4x4average .txt");
             else
                 loadWeights(@"defaultWeights\CountLearning\4x4kohonen nonLinearDelta 0,2.txt");
         }

@@ -11,7 +11,7 @@ namespace HandwrittingRecognition
     {
         public Rectangle bounds;
         public HashSet<Point> points;
-        private double[] digitVotes = new double[10];
+        public double[] digitVotes = new double[10];
 
         public HandwrittenDigit()
         {
