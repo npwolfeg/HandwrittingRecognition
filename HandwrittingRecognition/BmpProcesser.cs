@@ -19,7 +19,7 @@ namespace HandwrittingRecognition
             for (int i = 0; i < sourceBMP.Width; i++)
                 for (int j = 0; j < sourceBMP.Height; j++)
                 {
-                    if (sourceBMP.GetPixel(i, j).A > 0)
+                    if (sourceBMP.GetPixel(i, j).R < 255)
                     {
                         if (i < result[0])
                             result[0] = i;
@@ -65,46 +65,12 @@ namespace HandwrittingRecognition
             return result;
         }
 
-        private static int[] getBoundsRChannel(Bitmap sourceBMP)
-        {
-            int[] result = new int[4];
-            result[0] = sourceBMP.Width;
-            result[1] = 0;
-            result[2] = sourceBMP.Height;
-            result[3] = 0;
-            for (int i = 0; i < sourceBMP.Width; i++)
-                for (int j = 0; j < sourceBMP.Height; j++)
-                {
-                    if (sourceBMP.GetPixel(i, j).R < 255)
-                    {
-                        if (i < result[0])
-                            result[0] = i;
-                        if (i > result[1])
-                            result[1] = i;
-                        if (j < result[2])
-                            result[2] = j;
-                        if (j > result[3])
-                            result[3] = j;
-                    }
-                }
-            return result;
-        }
-
-        public static Bitmap renewRChannel(Bitmap bmp)
+        public static Bitmap renew(Bitmap bmp)
         {
             for (int i = 0; i < bmp.Width; i++)
                 for (int j = 0; j < bmp.Height; j++)
                     if (bmp.GetPixel(i, j).R < 255)
                         bmp.SetPixel(i,j,Color.FromArgb(255,0,0,0));
-            return bmp;
-        }
-
-        public static Bitmap renew(Bitmap bmp)
-        {
-            for (int i = 0; i < bmp.Width; i++)
-                for (int j = 0; j < bmp.Height; j++)
-                    if (bmp.GetPixel(i, j).A > 0)
-                        bmp.SetPixel(i, j, Color.Black);
             return bmp;
         }
 
@@ -118,30 +84,17 @@ namespace HandwrittingRecognition
                 result = bmp.Clone(cloneRect, format);
             return result;
         }
-     
-        public static Bitmap normalizeBitmap(Bitmap bmp, int width, int height)
+
+        public static Bitmap normalizeBitmap(Bitmap sourceBMP, int width, int height)
         {
-            Bitmap result = new Bitmap(width, height);
-            Bitmap cloneBitmap = copyPartOfBitmap(bmp, getBounds(bmp));
-            using (Graphics g = Graphics.FromImage(result))
-                g.DrawImage(cloneBitmap, 0, 0, width, height);
-            return result;
+            return ResizeBitmap(copyPartOfBitmap(sourceBMP, getBounds(sourceBMP)), width, height); 
         }
 
-        // need to refactor the same way as normalizeBitmap
-        public static Bitmap normalizeBitmapRChannel(Bitmap sourceBMP, int width, int height)
+        private static Bitmap ResizeBitmap(Bitmap sourceBMP, int width, int height)
         {
             Bitmap result = new Bitmap(width, height);
-            int[] bounds = getBoundsRChannel(sourceBMP);
-            Rectangle cloneRect = new Rectangle(bounds[0], bounds[2], bounds[1] - bounds[0], bounds[3] - bounds[2]);
-            System.Drawing.Imaging.PixelFormat format = sourceBMP.PixelFormat;
-            Bitmap cloneBitmap;
-            if (cloneRect.Width <= 0 || cloneRect.Height <= 0)
-                cloneBitmap = (Bitmap)sourceBMP.Clone();
-            else
-                cloneBitmap = sourceBMP.Clone(cloneRect, format);
             using (Graphics g = Graphics.FromImage(result))
-                g.DrawImage(cloneBitmap, 0, 0, width-1, height-1);
+                g.DrawImage(sourceBMP, 0, 0, width-1, height-1);
             return result;
         }
 
@@ -170,22 +123,15 @@ namespace HandwrittingRecognition
             return tempBmp;
         }
 
-        public static Bitmap ResizeBitmap(Bitmap sourceBMP, int width, int height)
-        {
-            Bitmap result = new Bitmap(width, height);
-            using (Graphics g = Graphics.FromImage(result))
-                g.DrawImage(sourceBMP, 0, 0, width, height);
-            return result;
-        }
-
-        public static Bitmap preprocessBitmap(Bitmap bmp)
+        /*public static Bitmap preprocessBitmap(Bitmap bmp)
         {
             //Bitmap result = GrayScale(bmp,100);
             Bitmap result = ResizeBitmap(bmp, 100, 100);
             result = normalizeBitmap(result, 100, 100);
             result = renew(result);
             return result;
-        }
+        }*/
+          
         public static bool lineIsEmpty(Bitmap bmp, int x)
         {
             bool result = true;
@@ -221,17 +167,21 @@ namespace HandwrittingRecognition
             return result;
         }
 
-        static public Bitmap DrawGrid(Bitmap bmp, int width, int height)
+        public static void fillWhite(Bitmap bmp)
         {
-            Bitmap result = new Bitmap(bmp);
-            for (int i = 0; i < bmp.Width; i++)
-                using (Graphics g = Graphics.FromImage(result))
+            SolidBrush b = new SolidBrush(Color.FromArgb(255, 255, 255, 255));
+            using (Graphics g = Graphics.FromImage(bmp))
+                g.FillRectangle(b, 0, 0, bmp.Width, bmp.Height);
+        }
+
+        static public void DrawGrid(Bitmap bmp, int width, int height)
+        {
+             for (int i = 0; i < bmp.Width; i++)
+                 using (Graphics g = Graphics.FromImage(bmp))
                     g.DrawLine(new Pen(Color.Orange, 2), i * 100, 0, i * 100, bmp.Height);
             for (int i = 0; i < bmp.Height; i++)
-                using (Graphics g = Graphics.FromImage(result))
+                using (Graphics g = Graphics.FromImage(bmp))
                     g.DrawLine(new Pen(Color.Orange, 2), 0, i * 100, bmp.Width, i * 100);
-            return result;
         }
     }
-
 }

@@ -119,10 +119,10 @@ namespace HandwrittingRecognition
 
         private void button13_Click(object sender, EventArgs e)
         {
-            drawingBitmap = BmpProcesser.GrayScale(drawingBitmap);
+            /*drawingBitmap = BmpProcesser.GrayScale(drawingBitmap);
             drawingBitmap = BmpProcesser.ResizeBitmap(drawingBitmap, 100, 100);
             pictureBox1.Image = drawingBitmap;
-            drawingBitmap = BmpProcesser.normalizeBitmap(drawingBitmap, 100, 100);
+            drawingBitmap = BmpProcesser.normalizeBitmap(drawingBitmap, 100, 100);*/
         }
 
         private void button7_Click(object sender, EventArgs e)
@@ -165,15 +165,6 @@ namespace HandwrittingRecognition
 
         private void button16_Click(object sender, EventArgs e)
         {
-            LBPLearning LBPLearner = new LBPLearning(true);
-            //LBPLearner.loadWeights(@"weights\LBPLearning\auto\4x4kohonen nonLinearDelta 0,2.txt");
-            CenterLearning CLearner = new CenterLearning(true);
-            //CLearner.loadWeights(@"weights\CenterLearning\auto\4x4kohonen nonLinearDelta 0,2.txt");
-            SimpleLearning SLearner = new SimpleLearning(true);
-            //SLearner.loadWeights(@"weights\SimpleLearning\auto\defaultWeight127kohonen nonLinearDelta 0,2.txt");
-            CountLearning CountLearner = new CountLearning(true);
-            //CountLearner.loadWeights(@"weights\CountLearning\Auto\16x16kohonen nonLinearDelta 0,2.txt");
-
             List<ILearner> learnerList = new List<ILearner>();
             learnerList.Add(new LBPLearning(true));
             learnerList.Add(new CenterLearning(true));
@@ -182,19 +173,10 @@ namespace HandwrittingRecognition
 
             if (BmpProcesser.isAlpha(drawingBitmap))
                 drawingBitmap = BmpProcesser.FromAlphaToRGB(drawingBitmap);
-            drawingBitmap = BmpProcesser.normalizeBitmapRChannel(drawingBitmap, 100, 100);
-            drawingBitmap = BmpProcesser.renewRChannel(drawingBitmap);
+            drawingBitmap = BmpProcesser.normalizeBitmap(drawingBitmap, 100, 100);
+            drawingBitmap = BmpProcesser.renew(drawingBitmap);
             listBox1.Items.Clear();
-            pictureBox1.Image = drawingBitmap;
-            int ID;
-            List<double> dist;           
-
-            CountLearner.loadWeights(@"weights\CountLearning\Auto\4x4kohonen nonLinearDelta 0,2.txt");
-
-            /*List<string> stringDist = Vector.toSortedStringList(CountLearner.guess(drawingBitmap));
-            listBox1.Items.Add("count 4x4 kohonen");
-            foreach(string st in stringDist)
-                listBox1.Items.Add(st);*/
+            pictureBox1.Image = drawingBitmap;       
 
             foreach (ILearner learner in learnerList)
             {
@@ -207,8 +189,7 @@ namespace HandwrittingRecognition
                 listBox1.Items.Add("avreage");
                 foreach (string st in stringDist)
                     listBox1.Items.Add(st);
-            }
-       
+            }       
         }
 
         private void button17_Click(object sender, EventArgs e)
@@ -238,7 +219,6 @@ namespace HandwrittingRecognition
             List<HandwrittenDigit> digits = new List<HandwrittenDigit>();
             Rectangle rect;
             HashSet<Point> pts;
-            //List<int> possibleDigits;
             Bitmap newBigBitmap = new Bitmap(bigBitmap);
             for (int i = 0; i < newBigBitmap.Width; i++)
                 for (int j = 0; j < newBigBitmap.Height; j++)
@@ -249,30 +229,28 @@ namespace HandwrittingRecognition
                         pts = BmpProcesser.getConnectedPicture(new Point(i, j), newBigBitmap);
 
                         Bitmap bmp = new Bitmap(newBigBitmap.Width, newBigBitmap.Height);
+                        BmpProcesser.fillWhite(bmp);
                         foreach (Point p in pts)
                         {
-                            bmp.SetPixel(p.X, p.Y, Color.Black);
+                            //bmp.SetPixel(p.X, p.Y, Color.Black);
+                            bmp.SetPixel(p.X, p.Y, Color.FromArgb(255,0,0,0));
                             newBigBitmap.SetPixel(p.X, p.Y, Color.FromArgb(0, 0, 0, 0));
                         }
                         rect = BmpProcesser.getBounds(bmp);
                         digits.Add(new HandwrittenDigit(rect, pts));
 
                         bmp = BmpProcesser.copyPartOfBitmap(bmp, rect);
-
-                        //possibleDigits = new List<int>();
-
-                        drawingBitmap = BmpProcesser.FromAlphaToRGB(bmp);
-                        drawingBitmap = BmpProcesser.normalizeBitmapRChannel(drawingBitmap, bmp.Width, bmp.Height);
-                        drawingBitmap = BmpProcesser.ResizeBitmap(drawingBitmap, 100, 100);
+                        bmp = BmpProcesser.normalizeBitmap(bmp, 100, 100);
 
                         foreach (ILearner learner in learnerList)
                         {
-                            digits.Last().addGuess(learner.guess(drawingBitmap));
+                            digits.Last().addGuess(learner.guess(bmp));
                             learner.loadDefault(true);
-                            digits.Last().addGuess(learner.guess(drawingBitmap));
+                            digits.Last().addGuess(learner.guess(bmp));
                         }
                     }
                 }
+
             //gather digits into numbers and display them on top of the first digit in number
             newBigBitmap = new Bitmap(bigBitmap);
             List<List<int>> numbers = DigitsToNumbersLogic.digitsToNumbers(digits);
@@ -293,7 +271,7 @@ namespace HandwrittingRecognition
 
         private void button2_Click(object sender, EventArgs e)
         {
-            bigBitmap = BmpProcesser.DrawGrid(bigBitmap, 100, 100);
+            BmpProcesser.DrawGrid(bigBitmap, 100, 100);
             pictureBox2.Image = bigBitmap;
         }
 
@@ -333,6 +311,12 @@ namespace HandwrittingRecognition
         private void button3_Click(object sender, EventArgs e)
         {
             textBox2.Text = (Convert.ToInt32(textBox2.Text) + 1).ToString();
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            BmpProcesser.fillWhite(drawingBitmap);
+            pictureBox1.Image = drawingBitmap;
         }
     }
 

@@ -27,7 +27,6 @@ namespace HandwrittingRecognition
         static public double[][] learnKohonen(double[] vector, int n, double[][] weights, int optionsCount, double delta)
         {
             List<double> arr = guess(vector,optionsCount,weights);  
-            //List<double> arr = guessKullbackLeiblerDistance(vector, optionsCount, weights);
             int id = arr.IndexOf(arr.Min());
             if (n != id)
                 for (int i = 0; i < vector.Length; i++)
@@ -35,7 +34,6 @@ namespace HandwrittingRecognition
                     weights[n][i] += delta * (vector[i] - weights[n][i]);
                     weights[id][i] += delta * (weights[n][i] - vector[i]);
                 }
-
             else
                 for (int i = 0; i < vector.Length; i++)
                     weights[n][i] += delta * (vector[i] - weights[n][i]);
@@ -71,7 +69,7 @@ namespace HandwrittingRecognition
                     bw.ReportProgress((int)((float)progress / maxProgress * 100));
                     bmp = new Bitmap(path + k.ToString() + n.ToString() + ".bmp");
                     bmp = BmpProcesser.FromAlphaToRGB(bmp);
-                    bmp = BmpProcesser.normalizeBitmapRChannel(bmp, 100, 100);
+                    bmp = BmpProcesser.normalizeBitmap(bmp, 100, 100);
                     learnKohonen(gv(bmp), k, weights, optionsCount,delta);
                 }
                 if (deltaAtTheEnd >= 1)
@@ -121,7 +119,7 @@ namespace HandwrittingRecognition
                     bw.ReportProgress((int)((float)progress / maxProgress * 100));
                     bmp = new Bitmap(path + k.ToString() + n.ToString() + ".bmp");
                     bmp = BmpProcesser.FromAlphaToRGB(bmp);
-                    bmp = BmpProcesser.normalizeBitmapRChannel(bmp, 100, 100);
+                    bmp = BmpProcesser.normalizeBitmap(bmp, 100, 100);
                     vector1 = gv(bmp);
                     for (int i = 0; i < vectorLength; i++)
                         weights[k][i] += vector1[i];
@@ -156,7 +154,7 @@ namespace HandwrittingRecognition
                     bw.ReportProgress((int)((float)progress / maxProgress * 100));
                     bmp = new Bitmap(path + k.ToString() + n.ToString() + ".bmp");
                     bmp = BmpProcesser.FromAlphaToRGB(bmp);
-                    bmp = BmpProcesser.normalizeBitmapRChannel(bmp, 100, 100);
+                    bmp = BmpProcesser.normalizeBitmap(bmp, 100, 100);
                     arr = guess(gv(bmp),optionsCount,weights);
                     ID = arr.IndexOf(arr.Min());
                     if (ID == k)
