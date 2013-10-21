@@ -155,21 +155,9 @@ namespace HandwrittingRecognition
             return false;
         }
 
-        static public Bitmap FromAlphaToRGB(Bitmap bitmap)
-        {
-            Bitmap result = new Bitmap(bitmap.Width,bitmap.Height);
-            for (int i = 0; i < bitmap.Width; i++)
-                for (int j = 0; j < bitmap.Height; j++)
-                {
-                    int temp = 255 - bitmap.GetPixel(i, j).A;
-                    result.SetPixel(i, j, Color.FromArgb(255, temp, temp, temp));
-                }
-            return result;
-        }
-
         public static void fillWhite(Bitmap bmp)
         {
-            SolidBrush b = new SolidBrush(Color.FromArgb(255, 255, 255, 255));
+            SolidBrush b = new SolidBrush(Color.White);
             using (Graphics g = Graphics.FromImage(bmp))
                 g.FillRectangle(b, 0, 0, bmp.Width, bmp.Height);
         }

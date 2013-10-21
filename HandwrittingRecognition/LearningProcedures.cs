@@ -13,7 +13,7 @@ namespace HandwrittingRecognition
 
     static class LearningProcedures
     {
-        static string path = @"F:\DigitDB\PictureSaver\";   
+        static string path = @"F:\DigitDB\PictureSaverWhiteBackGround\";   
 
         static public List<double> guess(double[] vector, int optionsCount, double[][]weights)
         {
@@ -68,7 +68,6 @@ namespace HandwrittingRecognition
                     progress++;
                     bw.ReportProgress((int)((float)progress / maxProgress * 100));
                     bmp = new Bitmap(path + k.ToString() + n.ToString() + ".bmp");
-                    bmp = BmpProcesser.FromAlphaToRGB(bmp);
                     bmp = BmpProcesser.normalizeBitmap(bmp, 100, 100);
                     learnKohonen(gv(bmp), k, weights, optionsCount,delta);
                 }
@@ -118,7 +117,6 @@ namespace HandwrittingRecognition
                     progress++;
                     bw.ReportProgress((int)((float)progress / maxProgress * 100));
                     bmp = new Bitmap(path + k.ToString() + n.ToString() + ".bmp");
-                    bmp = BmpProcesser.FromAlphaToRGB(bmp);
                     bmp = BmpProcesser.normalizeBitmap(bmp, 100, 100);
                     vector1 = gv(bmp);
                     for (int i = 0; i < vectorLength; i++)
@@ -153,7 +151,6 @@ namespace HandwrittingRecognition
                     progress++;
                     bw.ReportProgress((int)((float)progress / maxProgress * 100));
                     bmp = new Bitmap(path + k.ToString() + n.ToString() + ".bmp");
-                    bmp = BmpProcesser.FromAlphaToRGB(bmp);
                     bmp = BmpProcesser.normalizeBitmap(bmp, 100, 100);
                     arr = guess(gv(bmp),optionsCount,weights);
                     ID = arr.IndexOf(arr.Min());

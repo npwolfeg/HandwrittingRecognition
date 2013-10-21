@@ -109,7 +109,7 @@ namespace HandwrittingRecognition
 
         public void AutoTest(BackgroundWorker bw)
         {
-            for (int i = 4; i <= 4; i*=2)
+            for (int i = 1; i <= 4; i*=2)
             {
                 initialize(i, i);
                 string dir = @"F:\C#\HandwrittingRecognition\HandwrittingRecognition\bin\Debug\weights\" + this.GetType().Name + @"\auto\";
@@ -122,7 +122,7 @@ namespace HandwrittingRecognition
         public void AutoTest(BackgroundWorker bw, string path)
         {
             string currenPath;
-           /* bool linearDelta = false;
+            bool linearDelta = false;
             for (int x = 0; x < 1; x++) //to test with different delta functions
             {
                 for (double deltaAtTheEnd = 0.2; deltaAtTheEnd < 0.3; deltaAtTheEnd += 0.2)
@@ -138,7 +138,7 @@ namespace HandwrittingRecognition
                     LearningProcedures.saveGuess(guessAll(100, bw), currenPath);
                 }
                 linearDelta = true;
-            }*/
+            }
             currenPath = path + "average ";
             learnAllAverage(100, bw);
             saveWeights(currenPath + ".txt");

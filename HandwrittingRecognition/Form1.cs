@@ -26,8 +26,10 @@ namespace HandwrittingRecognition
         public void clearImg()
         {
             drawingBitmap = new Bitmap(100, 100);
+            BmpProcesser.fillWhite(drawingBitmap);
             pictureBox1.Image = drawingBitmap;
             bigBitmap = new Bitmap(pictureBox2.Width, pictureBox2.Height);
+            BmpProcesser.fillWhite(bigBitmap);
             pictureBox2.Image = bigBitmap;
         }
 
@@ -63,10 +65,11 @@ namespace HandwrittingRecognition
         public Form1()
         {
             InitializeComponent();
-            drawingBitmap = new Bitmap(100, 100);
+            /*drawingBitmap = new Bitmap(100, 100);
             pictureBox1.Image = drawingBitmap;
             bigBitmap = new Bitmap(pictureBox2.Width, pictureBox2.Height);
-            pictureBox2.Image = bigBitmap;
+            pictureBox2.Image = bigBitmap;*/
+            clearImg();
             distanceListBox.Items.Add("Euclid");
             distanceListBox.Items.Add("KullbackLeibler");
         }
@@ -104,7 +107,7 @@ namespace HandwrittingRecognition
             drawingBitmap = BmpProcesser.normalizeBitmapRChannel(drawingBitmap, 100, 100);
             pictureBox1.Image = drawingBitmap;*/
             bigBitmap = new Bitmap(@"Tests\bigBitmap" + textBox2.Text + ".bmp");
-            pictureBox2.Image = bigBitmap;            
+            pictureBox2.Image = bigBitmap;
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -171,12 +174,12 @@ namespace HandwrittingRecognition
             learnerList.Add(new SimpleLearning(true));
             learnerList.Add(new CountLearning(true));
 
-            if (BmpProcesser.isAlpha(drawingBitmap))
-                drawingBitmap = BmpProcesser.FromAlphaToRGB(drawingBitmap);
+            /*if (BmpProcesser.isAlpha(drawingBitmap))
+                drawingBitmap = BmpProcesser.FromAlphaToRGB(drawingBitmap);*/
             drawingBitmap = BmpProcesser.normalizeBitmap(drawingBitmap, 100, 100);
             drawingBitmap = BmpProcesser.renew(drawingBitmap);
             listBox1.Items.Clear();
-            pictureBox1.Image = drawingBitmap;       
+            pictureBox1.Image = drawingBitmap;
 
             foreach (ILearner learner in learnerList)
             {
@@ -189,7 +192,7 @@ namespace HandwrittingRecognition
                 listBox1.Items.Add("avreage");
                 foreach (string st in stringDist)
                     listBox1.Items.Add(st);
-            }       
+            }
         }
 
         private void button17_Click(object sender, EventArgs e)
@@ -224,7 +227,7 @@ namespace HandwrittingRecognition
                 for (int j = 0; j < newBigBitmap.Height; j++)
                 {
                     progressBar1.Value++;
-                    if (newBigBitmap.GetPixel(i, j).A != 0)
+                    if (newBigBitmap.GetPixel(i, j).R < 255)
                     {
                         pts = BmpProcesser.getConnectedPicture(new Point(i, j), newBigBitmap);
 
@@ -233,8 +236,8 @@ namespace HandwrittingRecognition
                         foreach (Point p in pts)
                         {
                             //bmp.SetPixel(p.X, p.Y, Color.Black);
-                            bmp.SetPixel(p.X, p.Y, Color.FromArgb(255,0,0,0));
-                            newBigBitmap.SetPixel(p.X, p.Y, Color.FromArgb(0, 0, 0, 0));
+                            bmp.SetPixel(p.X, p.Y, Color.FromArgb(255, 0, 0, 0));
+                            newBigBitmap.SetPixel(p.X, p.Y, Color.FromArgb(255, 255, 255, 255));
                         }
                         rect = BmpProcesser.getBounds(bmp);
                         digits.Add(new HandwrittenDigit(rect, pts));
@@ -315,10 +318,11 @@ namespace HandwrittingRecognition
 
         private void button5_Click(object sender, EventArgs e)
         {
-            BmpProcesser.fillWhite(drawingBitmap);
+            string path2 = @"F:\DigitDB\PictureSaverWhiteBackGround\";
+            drawingBitmap = new Bitmap(path2+"00.bmp");
             pictureBox1.Image = drawingBitmap;
         }
-    }
 
+    }
 }
 
