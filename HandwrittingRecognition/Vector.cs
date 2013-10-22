@@ -12,9 +12,9 @@ namespace HandwrittingRecognition
         {
             double sum = 0;
 
-            double min = vektor.Min();
+            /*double min = vektor.Min();
             for (int i = 0; i < vektor.Length; i++)
-                vektor[i] -= min;
+                vektor[i] -= min;*/
             for (int i = 0; i < vektor.Length; i++)
                 sum += vektor[i];
             for (int i = 0; i < vektor.Length; i++)

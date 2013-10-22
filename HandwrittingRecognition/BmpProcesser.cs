@@ -65,12 +65,86 @@ namespace HandwrittingRecognition
             return result;
         }
 
+        public static Bitmap FillBackGround(Point e, Bitmap bmpSource, int partition,Color fillColor)
+        {
+            int c;
+            Bitmap bmp = new Bitmap(bmpSource);
+            HashSet<Point> pts = new HashSet<Point>();
+            HashSet<Point> result = new HashSet<Point>();
+            pts.Add(e);
+            result.Add(e);
+            while (pts.Count > 0)
+            {
+                Point p = pts.First();
+                int x = p.X;
+                int y = p.Y;
+                c = bmpSource.GetPixel(x, y).R;
+                bmp.SetPixel(x, y, fillColor);
+                for (int i = -1; i < 2; i++)
+                    for (int j = -1; j < 2; j++)
+                    {
+                        int a = x + i;
+                        int b = y + j;
+                        if (a > -1 && a < bmp.Width && b > -1 && b < bmp.Height && bmpSource.GetPixel(a, b).R > c - partition && bmpSource.GetPixel(a, b).R < c + partition && !result.Contains(new Point(a, b)))
+                        {
+                            pts.Add(new Point(a, b));
+                            result.Add(new Point(a, b));
+                        }
+                    }
+                pts.Remove(p);
+            }
+            return bmp;
+        }
+
+        public static List<HandwrittenDigit> getDigitsList(Bitmap bigBitmap)
+        {
+            List<HandwrittenDigit> digits = new List<HandwrittenDigit>();
+            Rectangle rect;
+            HashSet<Point> pts;
+            Bitmap newBigBitmap = new Bitmap(bigBitmap);
+            for (int i = 0; i < newBigBitmap.Width; i++)
+                for (int j = 0; j < newBigBitmap.Height; j++)
+                {
+                    //progressBar1.Value++;
+                    if (newBigBitmap.GetPixel(i, j).R < 255)
+                    {
+                        pts = BmpProcesser.getConnectedPicture(new Point(i, j), newBigBitmap);
+
+                        Bitmap bmp = new Bitmap(newBigBitmap.Width, newBigBitmap.Height);
+                        BmpProcesser.fillWhite(bmp);
+                        foreach (Point p in pts)
+                        {
+                            bmp.SetPixel(p.X, p.Y, Color.FromArgb(255, 0, 0, 0));
+                            newBigBitmap.SetPixel(p.X, p.Y, Color.FromArgb(255, 255, 255, 255));
+                        }
+                        rect = BmpProcesser.getBounds(bmp);
+                        digits.Add(new HandwrittenDigit(rect, pts));
+
+                        bmp = BmpProcesser.copyPartOfBitmap(bmp, rect);
+                        bmp = BmpProcesser.normalizeBitmap(bmp, 100, 100);
+                        digits.Last().bmp = new Bitmap(bmp);
+                    }
+                }
+            return digits;
+        }
+
         public static Bitmap renew(Bitmap bmp)
         {
             for (int i = 0; i < bmp.Width; i++)
                 for (int j = 0; j < bmp.Height; j++)
                     if (bmp.GetPixel(i, j).R < 255)
                         bmp.SetPixel(i,j,Color.FromArgb(255,0,0,0));
+            return bmp;
+        }
+
+        public static Bitmap renew(Bitmap bmp, int partition)
+        {
+            for (int i = 0; i < bmp.Width; i++)
+                for (int j = 0; j < bmp.Height; j++)
+                    if (bmp.GetPixel(i, j).R < partition)
+                        bmp.SetPixel(i, j, Color.FromArgb(255, 0, 0, 0));
+                    else
+                        bmp.SetPixel(i, j, Color.FromArgb(255, 255, 255, 255));
             return bmp;
         }
 
@@ -98,9 +172,20 @@ namespace HandwrittingRecognition
             return result;
         }
 
-        public static Bitmap GrayScale(Bitmap bmp)
+        public static Bitmap GrayScale(Bitmap Bmp)
         {
-            return GrayScale(bmp, 120);
+            int rgb;
+            Color c;
+            Bitmap tempBmp = new Bitmap(Bmp);
+
+            for (int y = 0; y < Bmp.Height; y++)
+                for (int x = 0; x < Bmp.Width; x++)
+                {
+                    c = Bmp.GetPixel(x, y);
+                    rgb = (int)((.299 * c.R + .587 * c.G + .114 * c.B));
+                    tempBmp.SetPixel(x, y, Color.FromArgb(255, rgb, rgb, rgb));
+                }
+            return tempBmp;
         }
 
         public static Bitmap GrayScale(Bitmap Bmp, int partition)
@@ -118,7 +203,7 @@ namespace HandwrittingRecognition
                         rgb = 255;
                     else
                         rgb = 0;
-                    tempBmp.SetPixel(x, y, Color.FromArgb(255 - rgb, rgb, rgb, rgb));
+                    tempBmp.SetPixel(x, y, Color.FromArgb(255, rgb, rgb, rgb));
                 }
             return tempBmp;
         }
@@ -171,5 +256,34 @@ namespace HandwrittingRecognition
                 using (Graphics g = Graphics.FromImage(bmp))
                     g.DrawLine(new Pen(Color.Orange, 2), 0, i * 100, bmp.Width, i * 100);
         }
+
+        static public Bitmap smooth(Bitmap bmp, int width, int height)
+        {
+            Bitmap result = new Bitmap(bmp.Width, bmp.Height);
+
+            for(int i=0;i<result.Width;i++)
+                for (int j = 0; j < result.Height; j++)
+                {
+                    int count = 0;
+                    int average = 0;
+                    for(int x=-width/2;x<=width/2;x++)
+                        for (int y = -height / 2; y <= height / 2; y++)
+                        {
+                            int a = x + i;
+                            int b = y + j;
+                            if (a > -1 && a < result.Width && b > -1 && b < result.Height)
+                            {
+                                count++;
+                                average += bmp.GetPixel(a, b).R;
+                            }
+                        }
+                    //if (count != 0)
+                        average = average / count;
+                    result.SetPixel(i, j, Color.FromArgb(255, average, average, average));
+                }
+
+            return result;
+        }
+
     }
 }

@@ -12,6 +12,8 @@ namespace HandwrittingRecognition
         public Rectangle bounds;
         public HashSet<Point> points;
         public double[] digitVotes = new double[10];
+        public Bitmap bmp;
+        public int area = 0;
 
         public HandwrittenDigit()
         {
@@ -21,6 +23,7 @@ namespace HandwrittingRecognition
         {
             this.bounds = bounds;
             this.points = points;
+            area = bounds.Width * bounds.Height;
         }
 
         public void addGuess(List<double> dist)
