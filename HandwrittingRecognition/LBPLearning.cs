@@ -174,10 +174,12 @@ namespace HandwrittingRecognition
 
         public void AutoTest(BackgroundWorker bw)
         {
-            for (int i = 4; i <= 8; i += 2)
+            for (int i = 4; i <= 4; i += 2)
             {
                 initialize(i, i);
-                string path = @"F:\C#\HandwrittingRecognition\HandwrittingRecognition\bin\Debug\weights\" + this.GetType().Name + @"\auto\" + i + "x" + i;
+                string dir = @"F:\C#\HandwrittingRecognition\HandwrittingRecognition\bin\Debug\weights\" + this.GetType().Name + @"\MNIST\";
+                Directory.CreateDirectory(dir);
+                string path = dir + i + "x" + i;
                 AutoTest(bw, path);
             }
         }

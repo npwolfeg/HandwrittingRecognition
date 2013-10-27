@@ -13,7 +13,7 @@ namespace HandwrittingRecognition
 
     static class LearningProcedures
     {
-        static string path = @"F:\DigitDB\PictureSaverWhiteBackGround\";   
+        static string path = @"F:\DigitDB\MNIST\";   
 
         static public List<double> guess(double[] vector, int optionsCount, double[][]weights)
         {

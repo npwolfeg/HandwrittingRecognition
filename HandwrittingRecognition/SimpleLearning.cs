@@ -146,10 +146,9 @@ namespace HandwrittingRecognition
         {
             int i = 127;
             initialize(i);
-            string path = @"F:\C#\HandwrittingRecognition\HandwrittingRecognition\bin\Debug\weights\"+this.GetType().Name+@"\auto\" + "defaultWeight" + i;
-            AutoTest(bw, path);
-            randomInitialize();
-            path = @"F:\C#\HandwrittingRecognition\HandwrittingRecognition\bin\Debug\weights\" + this.GetType().Name + @"\auto\" + "randomWeight";
+            string dir = @"F:\C#\HandwrittingRecognition\HandwrittingRecognition\bin\Debug\weights\" + this.GetType().Name + @"\MNIST\";
+            Directory.CreateDirectory(dir);
+            string path = dir + "defaultWeight" + i;                        
             AutoTest(bw, path);
         }
 

@@ -128,6 +128,33 @@ namespace HandwrittingRecognition
             return digits;
         }
 
+        public static List<Rectangle> getRectList(Bitmap bigBitmap)
+        {
+            //List<HandwrittenDigit> digits = new List<HandwrittenDigit>();
+            List<Rectangle> result = new List<Rectangle>();
+            HashSet<Point> pts;
+            Bitmap newBigBitmap = new Bitmap(bigBitmap);
+            for (int i = 0; i < newBigBitmap.Width; i++)
+                for (int j = 0; j < newBigBitmap.Height; j++)
+                {
+                    //progressBar1.Value++;
+                    if (newBigBitmap.GetPixel(i, j).R < 255)
+                    {
+                        pts = BmpProcesser.getConnectedPicture(new Point(i, j), newBigBitmap);
+
+                        Bitmap bmp = new Bitmap(newBigBitmap.Width, newBigBitmap.Height);
+                        BmpProcesser.fillWhite(bmp);
+                        foreach (Point p in pts)
+                        {
+                            bmp.SetPixel(p.X, p.Y, Color.FromArgb(255, 0, 0, 0));
+                            newBigBitmap.SetPixel(p.X, p.Y, Color.FromArgb(255, 255, 255, 255));
+                        }
+                        result.Add(BmpProcesser.getBounds(bmp));
+                    }
+                }
+            return result;
+        }
+
         public static Bitmap renew(Bitmap bmp)
         {
             for (int i = 0; i < bmp.Width; i++)
@@ -168,7 +195,7 @@ namespace HandwrittingRecognition
         {
             Bitmap result = new Bitmap(width, height);
             using (Graphics g = Graphics.FromImage(result))
-                g.DrawImage(sourceBMP, 0, 0, width-1, height-1);
+                g.DrawImage(sourceBMP, 0, 0, width, height);
             return result;
         }
 
@@ -283,6 +310,16 @@ namespace HandwrittingRecognition
                 }
 
             return result;
+        }
+
+        static public Rectangle connectRects(Rectangle rect1, Rectangle rect2)
+        {
+            Rectangle result = new Rectangle();
+            result.X = Math.Min (rect1.X, rect2.X);
+            result.Y = Math.Min (rect1.Y, rect2.Y);
+            result.Width = Math.Max(rect1.Right, rect2.Right) - result.X;
+            result.Height = Math.Max(rect1.Bottom, rect2.Bottom) - result.Y;
+            return result;            
         }
 
     }
