@@ -8,11 +8,12 @@ using System.ComponentModel;
 
 namespace HandwrittingRecognition
 {
-    interface ILearner
+    // not needed anymore
+    /*interface ILearner
     {
         int getVectorLength(List<double> parameters);
         void loadDefault(bool average);
         List<double> guess(Bitmap bmp);
-        void AutoTest(BackgroundWorker bw);
-    }
+        void AutoTest(BackgroundWorker bw);        
+    }*/
 }

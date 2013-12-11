@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.ComponentModel;
 
 namespace HandwrittingRecognition
 {
@@ -96,8 +97,11 @@ namespace HandwrittingRecognition
             return bmp;
         }
 
-        public static List<HandwrittenDigit> getDigitsList(Bitmap bigBitmap)
+        public static List<HandwrittenDigit> getDigitsList(Bitmap bigBitmap, BackgroundWorker bw)
         {
+            int progress, maxProgress;
+            progress = 0;
+            maxProgress = bigBitmap.Width * bigBitmap.Height;
             List<HandwrittenDigit> digits = new List<HandwrittenDigit>();
             Rectangle rect;
             HashSet<Point> pts;
@@ -105,7 +109,8 @@ namespace HandwrittingRecognition
             for (int i = 0; i < newBigBitmap.Width; i++)
                 for (int j = 0; j < newBigBitmap.Height; j++)
                 {
-                    //progressBar1.Value++;
+                    progress++;
+                    bw.ReportProgress((int)((float)progress / maxProgress * 100));
                     if (newBigBitmap.GetPixel(i, j).R < 255)
                     {
                         pts = BmpProcesser.getConnectedPicture(new Point(i, j), newBigBitmap);
@@ -321,6 +326,19 @@ namespace HandwrittingRecognition
             result.Height = Math.Max(rect1.Bottom, rect2.Bottom) - result.Y;
             return result;            
         }
+
+        static public Bitmap FromAlphaToRGB(Bitmap bitmap)
+        {
+            Bitmap result = new Bitmap(bitmap.Width, bitmap.Height);
+            for (int i = 0; i < bitmap.Width; i++)
+                for (int j = 0; j < bitmap.Height; j++)
+                {
+                    int temp = 255 - bitmap.GetPixel(i, j).A;
+                    result.SetPixel(i, j, Color.FromArgb(255, temp, temp, temp));
+                }
+            return result;
+        }
+
 
     }
 }

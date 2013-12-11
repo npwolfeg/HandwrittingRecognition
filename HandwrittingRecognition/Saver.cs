@@ -26,13 +26,19 @@ namespace HandwrittingRecognition
             this.weights = weights;
         }
 
-        public LearnerData(int optionsCount, int vectorLength)
+        public LearnerData(int optionsCount, int vectorLength) //not needed anymore?
         {
             parameters = new List<double>();
             weights = new double[optionsCount][];
             for (int i = 0; i < optionsCount; i++)
                 weights[i] = new double[vectorLength];
-       } 
+       }
+
+        public LearnerData(double[][] weights)
+        {
+            parameters = new List<double>();
+            this.weights = weights;
+        }
 
     }
 

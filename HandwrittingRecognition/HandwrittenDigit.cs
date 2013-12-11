@@ -11,7 +11,7 @@ namespace HandwrittingRecognition
     {
         public Rectangle bounds;
         public HashSet<Point> points;
-        public double[] digitVotes = new double[10];
+        public double[] digitVotes = new double[42];
         public Bitmap bmp;
         public int area = 0;
 
@@ -32,9 +32,11 @@ namespace HandwrittingRecognition
                 digitVotes[i] += dist[i];
         }
 
-        public int digitWithMaxVotes()
+        public string digitWithMaxVotes()
         {
-            return digitVotes.ToList().IndexOf(digitVotes.Min());
+            List<string> stringDist = Vector.toSortedStringList(digitVotes.ToList());
+            return stringDist[0][0].ToString();
         }
+
     }
 }

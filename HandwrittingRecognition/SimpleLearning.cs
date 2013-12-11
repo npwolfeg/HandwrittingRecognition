@@ -9,17 +9,14 @@ using System.ComponentModel;
 
 namespace HandwrittingRecognition
 {
-    public class SimpleLearning : ILearner
-    {
-        static int optionsCount = 10;
-        public int vectorLength = 100*100;
-        public double[][] weights = new double[optionsCount][];
-        getVector handler;
+    public class SimpleLearning : Learner
+    {      
+        // o_O
         Saver.getVectorLength vectorLengthHandler;
 
         public SimpleLearning(bool load)
         {
-            handler = getVector;
+            // o_O
             vectorLengthHandler = getVectorLength;
             initialize(127);
             if (load)
@@ -28,6 +25,7 @@ namespace HandwrittingRecognition
 
         private void initialize(int defaultWeight)
         {
+            vectorLength = 100 * 100;
             for (int n = 0; n < optionsCount; n++)
             {
                 weights[n] = new double[vectorLength];
@@ -36,6 +34,7 @@ namespace HandwrittingRecognition
                 }
         }
 
+        // o_O
         public int getVectorLength(List<double> parameters)
         {
             return vectorLength;
@@ -52,45 +51,19 @@ namespace HandwrittingRecognition
             }
         }
 
-        public void saveWeights(string path)
+        override public void saveWeights(string path)
         {
-            LearnerData LD = new LearnerData(optionsCount,vectorLength);
+            LearnerData LD = new LearnerData(weights);
             Saver.saveWeights(path, LD, optionsCount, vectorLength);
         }
 
-        public void saveWeights()
-        {
-            SaveFileDialog sf = new SaveFileDialog();
-            if (sf.ShowDialog() == DialogResult.OK)
-            {
-                saveWeights(sf.FileName);
-            }
-        }
-
-        public void loadWeights(string path)
+        override public void loadWeights(string path)
         {
             LearnerData LD = Saver.loadWeights(path, 0, optionsCount, vectorLengthHandler);
             weights = LD.weights;
         }
 
-        public void loadWeights()
-        {
-            OpenFileDialog of = new OpenFileDialog();
-            if (of.ShowDialog() == DialogResult.OK)
-            {
-                loadWeights(of.FileName);
-            }
-        }
-
-        public void loadDefault(bool average)
-        {
-            if (average)
-                loadWeights(@"defaultWeights\SimpleLearning\defaultWeight127average .txt");
-            else
-                loadWeights(@"defaultWeights\SimpleLearning\defaultWeight127kohonen nonLinearDelta 0,2.txt");
-        }
-
-        public Bitmap visualize()
+        override public Bitmap visualize()
         {
             Bitmap result = new Bitmap(1000, 100);
             loadWeights();
@@ -110,7 +83,7 @@ namespace HandwrittingRecognition
             return result;
         }
 
-        public double[] getVector(Bitmap bmp)
+        override public double[] getVector(Bitmap bmp)
         {
             double[] result = new double[vectorLength];
             int counter = 0;
@@ -123,59 +96,11 @@ namespace HandwrittingRecognition
             return result;
         }
 
-        public List<double> guess(Bitmap bmp)
+        override public void RunAutoTest(BackgroundWorker bw)
         {
-            return LearningProcedures.guess(getVector(bmp), optionsCount, weights);
-        }
-
-        public void learnAllKohonen(int learningCount, BackgroundWorker bw, bool linearDelta, double deltaAtTheEnd)
-        {
-            weights = LearningProcedures.learnAll(learningCount, bw, linearDelta, deltaAtTheEnd, optionsCount, vectorLength, handler);
-        }
-
-        public void learnAllAverage(int learningCount, BackgroundWorker bw)
-        {
-            weights = LearningProcedures.learnAllAverage(learningCount, bw, optionsCount, vectorLength, handler);
-        }
-        public int[,] guessAll(int guessingCount, BackgroundWorker bw)
-        {
-            return LearningProcedures.guessAll(weights, guessingCount, bw, optionsCount, vectorLength, handler);
-        }
-
-        public void AutoTest(BackgroundWorker bw)
-        {
-            int i = 127;
+            int i = 0;
             initialize(i);
-            string dir = @"F:\C#\HandwrittingRecognition\HandwrittingRecognition\bin\Debug\weights\" + this.GetType().Name + @"\MNIST\";
-            Directory.CreateDirectory(dir);
-            string path = dir + "defaultWeight" + i;                        
-            AutoTest(bw, path);
+            AutoTest(bw);
         }
-
-        public void AutoTest(BackgroundWorker bw, string path)
-        {
-            string currenPath;
-            bool linearDelta = false;
-            for (int x = 0; x < 2; x++) //to test with different delta functions
-            {
-                for (double deltaAtTheEnd = 0.0; deltaAtTheEnd < 0.5; deltaAtTheEnd += 0.2)
-                {
-                    string deltaFunc;
-                    if (linearDelta)
-                        deltaFunc = " linearDelta ";
-                    else
-                        deltaFunc = " nonLinearDelta ";
-                    currenPath = path + "kohonen" + deltaFunc + deltaAtTheEnd.ToString();
-                    learnAllKohonen(100, bw, linearDelta, deltaAtTheEnd);
-                    saveWeights(currenPath + ".txt");
-                    LearningProcedures.saveGuess(guessAll(100, bw), currenPath);
-                }
-                linearDelta = true;
-            }
-            currenPath = path + "average ";
-            learnAllAverage(100, bw);
-            saveWeights(currenPath + ".txt");
-            LearningProcedures.saveGuess(guessAll(100, bw), currenPath);
-        } 
     }
 }

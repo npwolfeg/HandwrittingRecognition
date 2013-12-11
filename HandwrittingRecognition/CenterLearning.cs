@@ -10,23 +10,19 @@ using System.ComponentModel;
 
 namespace HandwrittingRecognition
 {
-    class CenterLearning : ILearner
+    class CenterLearning : Learner
     {
         int blockRows = 16;
         int blockCols = 16;
         static int picWidth = 100;
         static int picHeight = 100;
         int blockWidth;
-        int blockHeight;
-        public int optionsCount = 10;
-        public int vectorLength;
-        public double[][] weights;
-        getVector handler;
+        int blockHeight; 
+      
         Saver.getVectorLength vectorLengthHandler;
 
         public CenterLearning(bool load)
         {
-            handler = getVector;
             vectorLengthHandler = getVectorLength;
             initialize(16,16);
             if (load)
@@ -54,96 +50,28 @@ namespace HandwrittingRecognition
             return (int) (2 * parameters[0] * parameters[1]);
         }
 
-        public void saveWeights(string path)
+        override public void saveWeights(string path)
         {
             LearnerData LD = new LearnerData(blockCols, blockRows, weights);
             Saver.saveWeights(path, LD, optionsCount, vectorLength);
         }
-        
-        public void saveWeights()
-        {
-            SaveFileDialog sf = new SaveFileDialog();
-            if (sf.ShowDialog() == DialogResult.OK)
-            {
-                saveWeights(sf.FileName);
-            }
-        }
 
-        public void loadWeights(string path)
+        override public void loadWeights(string path)
         {
             LearnerData LD = Saver.loadWeights(path, 2, optionsCount, vectorLengthHandler);
             initialize((int)LD.parameters[0], (int)LD.parameters[1]);
             weights = LD.weights;
         }
 
-        public void loadWeights()
+        override public void RunAutoTest(BackgroundWorker bw)
         {
-            OpenFileDialog of = new OpenFileDialog();
-            if (of.ShowDialog() == DialogResult.OK)
+            for (int i = 4; i <= 4; i *= 2)
             {
-                loadWeights(of.FileName);
+                AutoTest(bw);
             }
         }
 
-        public void loadDefault(bool average)
-        {
-            if (average)
-                loadWeights(@"defaultWeights\CenterLearning\4x4average .txt");
-            else
-                loadWeights(@"defaultWeights\CenterLearning\4x4kohonen nonLinearDelta 0,2.txt");
-        }
-
-        public void learnAllKohonen(int learningCount, BackgroundWorker bw, bool linearDelta, double deltaAtTheEnd)
-        {
-            weights = LearningProcedures.learnAll(learningCount, bw, linearDelta, deltaAtTheEnd, optionsCount, vectorLength, handler);
-        }
-
-        public void learnAllAverage(int learningCount, BackgroundWorker bw)
-        {
-            weights = LearningProcedures.learnAllAverage(learningCount, bw, optionsCount, vectorLength, handler);
-        }
-        public int[,] guessAll(int guessingCount , BackgroundWorker bw)
-        {
-            return LearningProcedures.guessAll(weights, guessingCount, bw, optionsCount, vectorLength, handler);
-        }
-
-        public void AutoTest(BackgroundWorker bw)
-        {
-            int i = 4;
-                initialize(i, i);
-                string dir = @"F:\C#\HandwrittingRecognition\HandwrittingRecognition\bin\Debug\weights\" + this.GetType().Name + @"\MNIST\";
-                Directory.CreateDirectory(dir);
-                string path = dir + i + "x" + i;
-                AutoTest(bw, path);
-        }
-
-        public void AutoTest(BackgroundWorker bw, string path)
-        {
-            string currenPath;
-            bool linearDelta = false;
-            for (int x = 0; x < 2; x++) //to test with different delta functions
-            {
-                for (double deltaAtTheEnd = 0.0; deltaAtTheEnd < 0.5; deltaAtTheEnd += 0.2)
-                {
-                    string deltaFunc;
-                    if (linearDelta)
-                        deltaFunc = " linearDelta ";
-                    else
-                        deltaFunc = " nonLinearDelta ";
-                    currenPath = path + "kohonen" + deltaFunc + deltaAtTheEnd.ToString();
-                    learnAllKohonen(100, bw, linearDelta, deltaAtTheEnd);
-                    saveWeights(currenPath + ".txt");
-                    LearningProcedures.saveGuess(guessAll(100, bw), currenPath);
-                }
-                linearDelta = true;
-            }
-            currenPath = path + "average ";
-            learnAllAverage(100, bw);
-            saveWeights(currenPath + ".txt");
-            LearningProcedures.saveGuess(guessAll(100, bw), currenPath);
-        }
-
-        public Bitmap visualize()
+        override public Bitmap visualize()
         {            
             Bitmap result = new Bitmap(1000, 100);
             loadWeights();
@@ -189,7 +117,7 @@ namespace HandwrittingRecognition
             return result;
         }
 
-        public double[] getVector(Bitmap bmp)
+        override public double[] getVector(Bitmap bmp)
         {
             double[] result = new double[vectorLength];
             Rectangle copyRect;
@@ -207,10 +135,5 @@ namespace HandwrittingRecognition
                 }
             return result;
         }
-
-        public List<double> guess(Bitmap bmp)
-        {
-            return LearningProcedures.guess(getVector(bmp),optionsCount,weights);
-        } 
     }
 }
