@@ -233,7 +233,7 @@ namespace HandwrittingRecognition
                 for (int i=0;i<5;i++)
                     listBox1.Items.Add(stringDist[i]);
             }*/
-            double[] dist = nn.calculate(drawingBitmap);
+            double[] dist = nn.calculateNet(drawingBitmap);
             /*for (int i = 0; i < 42; i++)
                 listBox1.Items.Add(dist[i]);*/
             List<string> stringDist = Vector.toSortedStringList(dist.ToList());
@@ -301,7 +301,8 @@ namespace HandwrittingRecognition
             
             if (e.Error != null)
             {
-                MessageBox.Show(e.Error.Message);
+                MessageBox.Show(e.Error.StackTrace);
+                
             }
             else
                 MessageBox.Show("Done!");
@@ -326,8 +327,8 @@ namespace HandwrittingRecognition
                 //foreach (Learner learner in learnerList)
                     //learner.RunAutoTest(bw);
 
-                nn.backPropagation(bw, 3000, 0.5, 0.1);
-                nn.saveGuessNew(nn.guessAll(bw,3000),"nn");
+                nn.backPropagation(bw, 500, 0.5, 0.1);
+                nn.saveGuessNew(nn.guessAll(bw,500),"nn");
             };
             bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bg_test_RunWorkerCompleted);
             bw.ProgressChanged += new ProgressChangedEventHandler(bg_ProgressChanged);

@@ -61,6 +61,7 @@
     <Compile Include="Learner.cs" />
     <Compile Include="LearningProcedures.cs" />
     <Compile Include="NeuralNetwork.cs" />
+    <Compile Include="Neuron.cs" />
     <Compile Include="Pixel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
