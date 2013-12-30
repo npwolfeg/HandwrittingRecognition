@@ -200,7 +200,7 @@ namespace HandwrittingRecognition
         {
             Bitmap result = new Bitmap(width, height);
             using (Graphics g = Graphics.FromImage(result))
-                g.DrawImage(sourceBMP, 0, 0, width, height);
+                g.DrawImage(sourceBMP, 0, 0, width-1, height-1);
             return result;
         }
 

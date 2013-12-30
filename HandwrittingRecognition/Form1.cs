@@ -271,26 +271,27 @@ namespace HandwrittingRecognition
         private void button16_Click(object sender, EventArgs e)
         {
             List<Learner> learnerList = new List<Learner>();
-            learnerList.Add(new LBPLearning(true));
+            /*learnerList.Add(new LBPLearning(true));
             learnerList.Add(new CenterLearning(true));
             learnerList.Add(new SimpleLearning(true));
-            learnerList.Add(new CountLearning(true));
+            learnerList.Add(new CountLearning(true));*/
 
             drawingBitmap = BmpProcesser.normalizeBitmap(drawingBitmap, 100, 100);
             listBox1.Items.Clear();
             pictureBox1.Image = drawingBitmap;
+            List<string> stringDist;
 
             foreach (Learner learner in learnerList)
             {
-                List<string> stringDist = Vector.toSortedStringList(learner.guess(drawingBitmap));
+                stringDist = Vector.toSortedStringList(learner.guess(drawingBitmap));
                 listBox1.Items.Add("kohonen");  
                 for (int i=0;i<5;i++)
                     listBox1.Items.Add(stringDist[i]);
             }
-            /*double[] dist = nn.calculateNet(drawingBitmap);
-            List<string> stringDist = Vector.toSortedStringList(dist.ToList());
+            double[] dist = nn.calculate(drawingBitmap);
+            stringDist = Vector.toSortedStringList(dist.ToList());
             for (int i = 0; i < 42; i++)
-                listBox1.Items.Add(stringDist[i]);*/
+                listBox1.Items.Add(stringDist[i]);
         }
 
         private void button17_Click(object sender, EventArgs e)
@@ -326,14 +327,14 @@ namespace HandwrittingRecognition
                 List<Learner> learnerList = new List<Learner>();
                 //learnerList.Add(new LBPLearning(false));
                 //learnerList.Add(new CenterLearning(false));
-                learnerList.Add(new SimpleLearning(true));
-                //learnerList.Add(new CountLearning(false));
+                //learnerList.Add(new SimpleLearning(true));
+                learnerList.Add(new CountLearning(false));
 
                 foreach (Learner learner in learnerList)
                     learner.RunAutoTest(bw);
 
-                /*nn.backPropagation(bw, 500, 0.5, 0.1);
-                nn.saveGuessNew(nn.guessAll(bw,500),"nn");*/
+                /*nn.backPropagation(bw, 300, 0.5, 0.1);
+                nn.saveGuessNew(nn.guessAll(bw,300),"nn");*/
             };
             bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bg_test_RunWorkerCompleted);
             bw.ProgressChanged += new ProgressChangedEventHandler(bw_ProgressChanged);

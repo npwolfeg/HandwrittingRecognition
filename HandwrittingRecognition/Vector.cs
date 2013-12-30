@@ -40,6 +40,16 @@ namespace HandwrittingRecognition
             return vector;
         }
 
+        public static double[] invertVector(double[] vector)
+        {
+            double max = vector.Max();
+            double min = vector.Min();
+            double b = max + min;
+            for (int i = 0; i < vector.Length; i++)
+                vector[i] = b - vector[i];
+            return vector;
+        }
+
         public static List<string> toSortedStringList(List<double> dist)
         {
             string[] possibleOptions = new string[dist.Count];

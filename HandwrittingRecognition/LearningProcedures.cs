@@ -11,8 +11,7 @@ namespace HandwrittingRecognition
 {
     public delegate double[] getVector(Bitmap bmp); 
     
-
-    static class LearningProcedures
+    static class LearningProcedures //not needed anymore
     {
         static string path = @"F:\DigitDB\PictureSaverAll\";
         static string pathDigitsAndLetters = @"F:\DigitDB\DigitsAndLetters\";
