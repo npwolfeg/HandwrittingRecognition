@@ -328,13 +328,13 @@ namespace HandwrittingRecognition
                 //learnerList.Add(new LBPLearning(false));
                 //learnerList.Add(new CenterLearning(false));
                 //learnerList.Add(new SimpleLearning(true));
-                learnerList.Add(new CountLearning(false));
+                //learnerList.Add(new CountLearning(false));
 
                 foreach (Learner learner in learnerList)
                     learner.RunAutoTest(bw);
 
-                /*nn.backPropagation(bw, 300, 0.5, 0.1);
-                nn.saveGuessNew(nn.guessAll(bw,300),"nn");*/
+                nn.backPropagation(bw, 300, 0.5, 0.1);
+                nn.saveGuessNew(nn.guessAll(bw,300),"nn");
             };
             bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bg_test_RunWorkerCompleted);
             bw.ProgressChanged += new ProgressChangedEventHandler(bw_ProgressChanged);
