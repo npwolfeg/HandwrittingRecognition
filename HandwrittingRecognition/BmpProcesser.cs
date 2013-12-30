@@ -97,12 +97,12 @@ namespace HandwrittingRecognition
             return bmp;
         }
 
-        public static List<HandwrittenDigit> getDigitsList(Bitmap bigBitmap, BackgroundWorker bw)
+        public static List<HandwrittenSymbol> getDigitsList(Bitmap bigBitmap, BackgroundWorker bw)
         {
             int progress, maxProgress;
             progress = 0;
             maxProgress = bigBitmap.Width * bigBitmap.Height;
-            List<HandwrittenDigit> digits = new List<HandwrittenDigit>();
+            List<HandwrittenSymbol> digits = new List<HandwrittenSymbol>();
             Rectangle rect;
             HashSet<Point> pts;
             Bitmap newBigBitmap = new Bitmap(bigBitmap);
@@ -123,7 +123,7 @@ namespace HandwrittingRecognition
                             newBigBitmap.SetPixel(p.X, p.Y, Color.FromArgb(255, 255, 255, 255));
                         }
                         rect = BmpProcesser.getBounds(bmp);
-                        digits.Add(new HandwrittenDigit(rect, pts));
+                        digits.Add(new HandwrittenSymbol(rect, pts));
 
                         bmp = BmpProcesser.copyPartOfBitmap(bmp, rect);
                         bmp = BmpProcesser.normalizeBitmap(bmp, 100, 100);

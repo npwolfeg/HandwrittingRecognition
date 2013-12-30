@@ -18,7 +18,8 @@ namespace HandwrittingRecognition
         bool canDraw = false;
         Bitmap drawingBitmap, bigBitmap;
         int drawingWidth = 3;
-        Point[] points = new Point[2];
+        List<Point> points = new List<Point>();
+        BackgroundWorker bw = new BackgroundWorker();
         DistanceType distanceType = DistanceType.Euclid;
 
         NeuralNetwork nn = new NeuralNetwork(100 * 100);
@@ -28,7 +29,8 @@ namespace HandwrittingRecognition
             drawingBitmap = new Bitmap(100, 100);
             BmpProcesser.fillWhite(drawingBitmap);
             pictureBox1.Image = drawingBitmap;
-            bigBitmap = new Bitmap(pictureBox2.Width, pictureBox2.Height);
+             // если не вычитать 2 - расширяется
+            bigBitmap = new Bitmap(pictureBox2.Width-2, pictureBox2.Height-2);
             BmpProcesser.fillWhite(bigBitmap);
             pictureBox2.Image = bigBitmap;
         }
@@ -98,13 +100,38 @@ namespace HandwrittingRecognition
         public Form1()
         {
             InitializeComponent();
-            /*drawingBitmap = new Bitmap(100, 100);
-            pictureBox1.Image = drawingBitmap;
-            bigBitmap = new Bitmap(pictureBox2.Width, pictureBox2.Height);
-            pictureBox2.Image = bigBitmap;*/
             clearImg();
             distanceListBox.Items.Add("Euclid");
             distanceListBox.Items.Add("KullbackLeibler");
+        }
+
+        void prepareBwForDrawing()
+        {
+            bw = new BackgroundWorker();
+            bw.DoWork += (sender1, e1) =>
+            {
+                pointsConnecter();
+            };
+            bw.WorkerSupportsCancellation = true;            
+        }
+
+        void prepareBwForRecognition()
+        {
+            bw = new BackgroundWorker();
+            bw.RunWorkerCompleted += (sender1, e1) =>
+            {
+                pictureBox2.Image = (Bitmap)e1.Result;
+            };
+            bw.ProgressChanged += new ProgressChangedEventHandler(bw_ProgressChanged);
+            bw.WorkerReportsProgress = true;
+            bw.WorkerSupportsCancellation = true;
+            progressBar1.Value = 0;
+            progressBar1.Maximum = 100;
+
+            bw.DoWork += (sender1, e1) =>
+            {
+                e1.Result = Recognition.bigPictureRecognition(bigBitmap, bw);
+            };
         }
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
@@ -174,25 +201,52 @@ namespace HandwrittingRecognition
             textBox1.Text = (ts.Seconds * 1000 + ts.Milliseconds).ToString();
         }
 
+        void pointsConnecter()
+        {
+            Graphics g = Graphics.FromImage(bigBitmap);
+            int i = 4;
+
+            while (canDraw)
+            {               
+                while (points.Count < i && canDraw) ;
+                //g.DrawLine(new Pen(Color.Black, 4), points[i - 2], points[i - 1]);
+                g.DrawCurve(new Pen(Color.Black, 4), points.ToArray());
+                i++;                
+            }
+        }
+
         private void pictureBox2_MouseDown(object sender, MouseEventArgs e)
         {
-            canDraw = true;
+            if (e.Button == MouseButtons.Left)
+            {
+                canDraw = true;
+                prepareBwForDrawing();
+                bw.RunWorkerAsync();
+            }
+            else
+            {
+                prepareBwForRecognition();
+                bw.RunWorkerAsync();            
+            }
         }
 
         private void pictureBox2_MouseUp(object sender, MouseEventArgs e)
         {
             canDraw = false;
-
+            bw.CancelAsync();
+            points.Clear();
         }
 
         private void pictureBox2_MouseMove(object sender, MouseEventArgs e)
         {
             if (canDraw)
             {
-                for (int i = 0; i < drawingWidth; i++)
+                /*for (int i = 0; i < drawingWidth; i++)
                     for (int j = 0; j < drawingWidth; j++)
                         if (e.X + i > -1 && e.X + i < bigBitmap.Width && e.Y + j > -1 && e.Y + j < bigBitmap.Height)
                             bigBitmap.SetPixel(e.X + i, e.Y + j, Color.Black);
+                pictureBox2.Image = bigBitmap;*/
+                points.Add(e.Location);
                 pictureBox2.Image = bigBitmap;
             }
             else
@@ -226,68 +280,23 @@ namespace HandwrittingRecognition
             listBox1.Items.Clear();
             pictureBox1.Image = drawingBitmap;
 
-            /*foreach (Learner learner in learnerList)
+            foreach (Learner learner in learnerList)
             {
                 List<string> stringDist = Vector.toSortedStringList(learner.guess(drawingBitmap));
                 listBox1.Items.Add("kohonen");  
                 for (int i=0;i<5;i++)
                     listBox1.Items.Add(stringDist[i]);
-            }*/
-            double[] dist = nn.calculateNet(drawingBitmap);
-            /*for (int i = 0; i < 42; i++)
-                listBox1.Items.Add(dist[i]);*/
+            }
+            /*double[] dist = nn.calculateNet(drawingBitmap);
             List<string> stringDist = Vector.toSortedStringList(dist.ToList());
             for (int i = 0; i < 42; i++)
-                listBox1.Items.Add(stringDist[i]);
+                listBox1.Items.Add(stringDist[i]);*/
         }
 
         private void button17_Click(object sender, EventArgs e)
         {
-            //save bigBitmap to tests directory
-            int count;
-            using (StreamReader sw = new StreamReader(@"Tests\count.txt"))
-            {
-                count = Convert.ToInt32(sw.ReadLine());
-            }
-            bigBitmap.Save(@"Tests\bigBitmap" + count.ToString() + ".bmp");
-            count++;
-            using (StreamWriter sw = new StreamWriter(@"Tests\count.txt"))
-            {
-                sw.Write(count);
-            }
-
-            List<Learner> learnerList = new List<Learner>();
-            learnerList.Add(new LBPLearning(true));
-            learnerList.Add(new CenterLearning(true));
-            learnerList.Add(new SimpleLearning(true));
-            learnerList.Add(new CountLearning(true));
-
-            List<HandwrittenDigit> digits = BmpProcesser.getDigitsList(bigBitmap, new BackgroundWorker());
-
-            foreach(HandwrittenDigit digit in digits)
-                foreach (Learner learner in learnerList)
-                {
-                    digit.addGuess(learner.guess(digit.bmp));
-
-                }
-
-            //gather digits into numbers and display them on top of the first digit in number
-            Bitmap newBigBitmap = new Bitmap(bigBitmap);
-            List<List<int>> numbers = DigitsToNumbersLogic.digitsToNumbers(digits);
-            foreach (List<int> number in numbers)
-            {
-                int counter = 0;
-                int left = digits[number[0]].bounds.Left;
-                int top = digits[number[0]].bounds.Top;
-                foreach (int digit in number)
-                {
-                    using (Graphics g = Graphics.FromImage(newBigBitmap))
-                        g.DrawString(digits[digit].digitWithMaxVotes().ToString(), new Font("Arial", 20), new SolidBrush(Color.Red), left + counter * 20, top-30);
-                        //g.DrawString(digits[digit].digitWithMaxVotes().ToString(), new Font("Arial", 20), new SolidBrush(Color.Red), digits[digit].bounds.Left, digits[digit].bounds.Top-40);
-                    counter++;
-                }
-            }
-            pictureBox2.Image = newBigBitmap;
+            prepareBwForRecognition();
+            bw.RunWorkerAsync();
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -297,18 +306,14 @@ namespace HandwrittingRecognition
         }
 
         private void bg_test_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            
+        {            
             if (e.Error != null)
-            {
-                MessageBox.Show(e.Error.StackTrace);
-                
-            }
+                MessageBox.Show(e.Error.Message);                
             else
                 MessageBox.Show("Done!");
         }
 
-        private void bg_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        private void bw_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             progressBar1.Value = e.ProgressPercentage;
         }
@@ -321,17 +326,17 @@ namespace HandwrittingRecognition
                 List<Learner> learnerList = new List<Learner>();
                 //learnerList.Add(new LBPLearning(false));
                 //learnerList.Add(new CenterLearning(false));
-                //learnerList.Add(new SimpleLearning(true));
+                learnerList.Add(new SimpleLearning(true));
                 //learnerList.Add(new CountLearning(false));
 
-                //foreach (Learner learner in learnerList)
-                    //learner.RunAutoTest(bw);
+                foreach (Learner learner in learnerList)
+                    learner.RunAutoTest(bw);
 
-                nn.backPropagation(bw, 500, 0.5, 0.1);
-                nn.saveGuessNew(nn.guessAll(bw,500),"nn");
+                /*nn.backPropagation(bw, 500, 0.5, 0.1);
+                nn.saveGuessNew(nn.guessAll(bw,500),"nn");*/
             };
             bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bg_test_RunWorkerCompleted);
-            bw.ProgressChanged += new ProgressChangedEventHandler(bg_ProgressChanged);
+            bw.ProgressChanged += new ProgressChangedEventHandler(bw_ProgressChanged);
             bw.WorkerReportsProgress = true;
             progressBar1.Value = 0;
             progressBar1.Maximum = 100;
@@ -462,15 +467,15 @@ namespace HandwrittingRecognition
         {
             /*bigBitmap = BmpProcesser.renew(bigBitmap, 1);
             pictureBox2.Image = bigBitmap;*/
-            List<HandwrittenDigit> digits = BmpProcesser.getDigitsList(bigBitmap, new BackgroundWorker());
+            List<HandwrittenSymbol> digits = BmpProcesser.getDigitsList(bigBitmap, new BackgroundWorker());
             int maxArea = 0;
-            foreach (HandwrittenDigit digit in digits)
+            foreach (HandwrittenSymbol digit in digits)
             {
                 if (digit.area>maxArea)
                     maxArea = digit.area;
             }
 
-            foreach (HandwrittenDigit digit in digits)
+            foreach (HandwrittenSymbol digit in digits)
             {
                 if (digit.area < maxArea/20)
                     foreach (Point p in digit.points)
@@ -571,7 +576,7 @@ namespace HandwrittingRecognition
             learnerList.Add(new SimpleLearning(true));
             learnerList.Add(new CountLearning(true));
 
-            List<HandwrittenDigit> digits = new List<HandwrittenDigit>();
+            List<HandwrittenSymbol> digits = new List<HandwrittenSymbol>();
             Bitmap newBigBitmap = new Bitmap(bigBitmap);
             int correctAnswersCount = 0;
 
@@ -579,15 +584,16 @@ namespace HandwrittingRecognition
             bw.DoWork += (sender1, e1) =>
             {
                 digits = BmpProcesser.getDigitsList(bigBitmap, bw);
-                foreach (HandwrittenDigit digit in digits)
+                foreach (HandwrittenSymbol digit in digits)
                     foreach (Learner learner in learnerList)
                     {
                         digit.addGuess(learner.guess(digit.bmp));
-
                     }
 
-                //gather digits into numbers and display them on top of the first digit in number                
-                List<List<int>> numbers = DigitsToNumbersLogic.digitsToNumbers(digits);
+                //gather digits into numbers and display them on top of the first digit in number      
+          
+                //List<List<int>> numbers = SymbolsToWordsLogic.SymbolsToWords(digits);
+                List<List<int>> numbers = new List<List<int>>();//stub
 
                 
                 foreach (List<int> number in numbers)
@@ -599,9 +605,9 @@ namespace HandwrittingRecognition
                     {
                         using (Graphics g = Graphics.FromImage(newBigBitmap))
                             // g.DrawString(digits[digit].digitWithMaxVotes().ToString(), new Font("Arial", 20), new SolidBrush(Color.Red), left + counter * 20, top - 30);
-                            g.DrawString(digits[digit].digitWithMaxVotes().ToString(), new Font("Arial", 20), new SolidBrush(Color.Red), digits[digit].bounds.Left, digits[digit].bounds.Top);
-                        string str = digits[digit].digitWithMaxVotes();
-                        int symbol = (int)(digits[digit].digitWithMaxVotes()[0]) - 1072;
+                            g.DrawString(digits[digit].symbolWithMaxVotes().ToString(), new Font("Arial", 20), new SolidBrush(Color.Red), digits[digit].bounds.Left, digits[digit].bounds.Top);
+                        string str = digits[digit].symbolWithMaxVotes();
+                        int symbol = (int)(digits[digit].symbolWithMaxVotes()[0]) - 1072;
                         if (symbol == (int)(digits[digit].bounds.Top / 100))
                             correctAnswersCount++;
                         counter++;
@@ -614,7 +620,7 @@ namespace HandwrittingRecognition
                 textBox1.Text = correctAnswersCount.ToString();
                 pictureBox2.Image = newBigBitmap;
             };
-            bw.ProgressChanged += new ProgressChangedEventHandler(bg_ProgressChanged);
+            bw.ProgressChanged += new ProgressChangedEventHandler(bw_ProgressChanged);
             bw.WorkerReportsProgress = true;
             //progressBar1.Value = 0;
             //progressBar1.Maximum = 100;

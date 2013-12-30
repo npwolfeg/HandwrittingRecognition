@@ -31,6 +31,15 @@ namespace HandwrittingRecognition
             return normalyzeVektor(vektor.ToArray(), max).ToList();
         }
 
+        public static double[] normalyzeVector(double[] vector)
+        {
+            double max = vector.Max();
+            double min = vector.Min();
+            for (int i = 0; i < vector.Length; i++)
+                vector[i] = (vector[i] - min) / (max - min);
+            return vector;
+        }
+
         public static List<string> toSortedStringList(List<double> dist)
         {
             string[] possibleOptions = new string[dist.Count];
@@ -45,9 +54,9 @@ namespace HandwrittingRecognition
             int ID;
             for (int i = 0; i < dist.Count; i++)
             {
-                ID = dist.IndexOf(dist.Max());
+                ID = dist.IndexOf(dist.Min());
                 result.Add(possibleOptions[ID] + ' ' + dist[ID].ToString());
-                dist[ID] = -100000;
+                dist[ID] = 100000;
             }
             return result;
         }

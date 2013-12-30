@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<useCaseModelRoot xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/SimpleShapesModel" dslVersion="1.0.0.0" Id="5398e590-d864-4ada-b462-3535206f5819" name="Варианты использования" linkedPackageId="b8358fb3-4adf-44c1-88d1-20c0eda679b9" xmlns="http://schemas.microsoft.com/dsltools/UseCaseModel">
+  <packagedElements>
+    <useCaseModelRootHasTypes>
+      <actor Id="74794656-b06c-4c4e-88e8-991b893d0a1f" name="Пользователь" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="96d85f32-5554-4146-a0e4-00408e9341bc" />
+        <targetEnds>
+          <association Id="619e4abd-8867-4b77-a3f9-93465d94be6c" isDerived="false" sourceEndRoleName="Пользователь" targetEndRoleName="Нарисовать текст" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="6e955654-32c7-4f1e-86f8-b7b9d18fa8dc" LastKnownName="Редактирование изображения" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="4538a514-7a21-434e-aecc-a3cb28278aab" name="Пользователь" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="dd77c3ee-d99f-4071-b49b-de184ab5f67f" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="8625d72f-56bb-411e-bd72-677c1d51daae" name="Нарисовать текст" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="b07e5446-8ef6-42f3-b431-4a9621dd0250" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="a4e2d331-15e8-4e70-bbbc-971f76982797" />
+          </association>
+          <association Id="dea4ce59-de31-45e5-a7d9-7729158d56d8" isDerived="false" sourceEndRoleName="Пользователь" targetEndRoleName="распознать текст на изображении" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="971ae20c-62fa-4d2a-9388-134605517e1f" LastKnownName="распознать текст на изображении" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="c688e4bd-94c0-4fcf-a8da-956bdabdb91b" name="Пользователь" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="94cc7a10-12cf-4390-911a-06311583c26f" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="57142964-bd4d-451c-b03b-2eacd7a51ea7" name="распознать текст на изображении" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="b11a74b3-6b26-4236-9797-c85215cd9ef2" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="1867bf79-82b5-4f02-a449-b7148e96099d" />
+          </association>
+          <association Id="2edbf6c9-7acb-4c1b-8006-be7f355317b0" isDerived="false" sourceEndRoleName="Пользователь" targetEndRoleName="Редактирование изображения1" isLeaf="false" isAbstract="false">
+            <useCaseMoniker Id="3a423cba-bd82-4a37-93d4-475e72a2a9de" LastKnownName="Задание параметров распознавателя" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="b636ad5d-21cc-4abc-8cf3-cbfb59950430" name="Пользователь" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="df8f940c-76a6-4422-bc09-ecd2dc6c0656" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="d09fe270-84e2-4aa1-b416-ff61c7e90ed2" name="Редактирование изображения1" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="221fd22d-59db-4cfd-bc52-860395e6aa52" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="a2caba30-ef7b-4c8d-8062-17357a87bdbd" />
+          </association>
+        </targetEnds>
+      </actor>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="6e955654-32c7-4f1e-86f8-b7b9d18fa8dc" name="Редактирование изображения" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="602f9cb5-f028-4654-8b47-0eebea88edd0" />
+        <additions>
+          <include Id="a610567f-5783-4a45-9f59-0cb4bc6a017e">
+            <useCaseMoniker Id="bbc7c038-9a06-4beb-ab30-f70712650581" LastKnownName="Рукописный ввод" />
+            <elementDefinition Id="1617dd99-d06f-4e28-9cc2-e9a5760b8fd8" />
+          </include>
+          <include Id="4d266f19-5fe6-4f84-99c9-c097acb13b8e">
+            <useCaseMoniker Id="33871d12-20cd-4c72-88a1-0378e1995cd7" LastKnownName="Очистить изображение" />
+            <elementDefinition Id="29b8d07b-3da9-4bec-a495-bdfc18f86078" />
+          </include>
+        </additions>
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="33871d12-20cd-4c72-88a1-0378e1995cd7" name="Очистить изображение" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="8adcc6e9-8593-4fc2-a407-475c5dc1ce98" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="971ae20c-62fa-4d2a-9388-134605517e1f" name="распознать текст на изображении" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="de9eb335-f5a6-4f65-bfc3-1a39f299fca8" />
+        <additions>
+          <include Id="366f8496-7065-49ee-829b-73f6a0661595">
+            <useCaseMoniker Id="09621e62-b69c-4cac-b5f7-1ee8f804325f" LastKnownName="Сохранить результат" />
+            <elementDefinition Id="5d190554-289a-4efe-8348-97896e8e2bf2" />
+          </include>
+        </additions>
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="bbc7c038-9a06-4beb-ab30-f70712650581" name="Рукописный ввод" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="c97b3ecf-f780-4fac-960c-bb0e8000c344" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="09621e62-b69c-4cac-b5f7-1ee8f804325f" name="Сохранить результат" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="8e16d363-0137-453d-b2aa-983865c677b3" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="3a423cba-bd82-4a37-93d4-475e72a2a9de" name="Задание параметров распознавателя" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="6f99bc8b-d7ec-49a2-87cf-4b8c3c62f497" />
+        <extendedCases>
+          <extend Id="5679adbf-0d7d-4e87-b91a-afd6207d68a7">
+            <useCaseMoniker Id="ff51ffd8-1587-4c2f-98f3-948bf89eb960" LastKnownName="Загрузка готовых параметров" />
+            <elementDefinition Id="733caa26-f2b2-4229-90d6-9124f5b4883b" />
+          </extend>
+          <extend Id="9a0a8f33-40b0-4623-be89-5a8d0fbdf8c0">
+            <useCaseMoniker Id="30439d0b-ddb7-41d3-b1c9-12e23ef57a35" LastKnownName="Обучение распознавателя по базе примеров" />
+            <elementDefinition Id="54790014-2285-4c7a-97fc-baa42a56c693" />
+          </extend>
+        </extendedCases>
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="30439d0b-ddb7-41d3-b1c9-12e23ef57a35" name="Обучение распознавателя по базе примеров" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="b4d76feb-ae8a-4070-992d-1c75e8ab3438" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+    <useCaseModelRootHasTypes>
+      <useCase Id="ff51ffd8-1587-4c2f-98f3-948bf89eb960" name="Загрузка готовых параметров" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="d119402a-ba54-40fb-9e2e-32bd717a71b2" />
+      </useCase>
+    </useCaseModelRootHasTypes>
+  </packagedElements>
+  <package Id="b8358fb3-4adf-44c1-88d1-20c0eda679b9" name="ModelingProject1">
+    <elementDefinition Id="59b4f490-3008-41ac-83c4-3e9f7c05baec" />
+    <profileInstances>
+      <packageHasProfileInstances Id="ab17f715-16bd-4014-b617-02584f751d08">
+        <profileInstance Id="5bbf9deb-7725-4f8e-aea0-104cff9e55e5" name="StandardProfileL2">
+          <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+        </profileInstance>
+        <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+      </packageHasProfileInstances>
+      <packageHasProfileInstances Id="482b3fe5-a8d5-410d-ae94-cc3ede053a56">
+        <profileInstance Id="ec5a40d6-b7f5-4860-bea1-0ce164eb0c1f" name="StandardProfileL3">
+          <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+        </profileInstance>
+        <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+      </packageHasProfileInstances>
+    </profileInstances>
+  </package>
+</useCaseModelRoot>

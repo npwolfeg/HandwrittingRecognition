@@ -1,0 +1,579 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<modelStoreModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" xmlns:dm9="http://schemas.microsoft.com/dsltools/SimpleShapesModel" xmlns:dm10="http://schemas.microsoft.com/dsltools/UseCaseModel" xmlns:dm11="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner" xmlns:dm12="http://schemas.microsoft.com/VisualStudio/TeamArchitect/ActivityDesigner"
+  dslVersion="1.0.0.0"
+  Id="59b4f490-3008-41ac-83c4-3e9f7c05baec"
+  name="ModelingProject1" xmlns="http://schemas.microsoft.com/dsltools/ModelStore">
+  <profileInstances>
+    <packageHasProfileInstances
+      Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b">
+      <profileInstance
+        Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791"
+        name="StandardProfileL2" />
+    </packageHasProfileInstances>
+    <packageHasProfileInstances
+      Id="29349502-908c-4fda-9054-c48619c59ed0">
+      <profileInstance
+        Id="532ea607-fb19-44b8-8502-3351b05452be"
+        name="StandardProfileL3" />
+    </packageHasProfileInstances>
+  </profileInstances>
+  <packagedElements>
+    <packageHasNamedElement>
+      <class
+        Id="934b2e7c-ebc4-42a0-a747-98346ba4b9e8"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="b0517f95-1243-48ef-bddc-7e9535f686df"
+        name="Class1"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <actor
+        Id="96d85f32-5554-4146-a0e4-00408e9341bc"
+        name="Пользователь"
+        isAbstract="false"
+        isLeaf="false">
+        <targetEnds>
+          <association
+            Id="a4e2d331-15e8-4e70-bbbc-971f76982797"
+            isDerived="false"
+            sourceEndRoleName="Пользователь"
+            targetEndRoleName="Нарисовать текст"
+            isLeaf="false"
+            isAbstract="false">
+            <useCaseMoniker
+              Id="602f9cb5-f028-4654-8b47-0eebea88edd0"
+              LastKnownName="Редактирование изображения"
+              LastKnownLocation="ModelingProject1.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="dd77c3ee-d99f-4071-b49b-de184ab5f67f"
+                  name="Пользователь"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="b07e5446-8ef6-42f3-b431-4a9621dd0250"
+                  name="Нарисовать текст"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="1867bf79-82b5-4f02-a449-b7148e96099d"
+            isDerived="false"
+            sourceEndRoleName="Пользователь"
+            targetEndRoleName="распознать текст на изображении"
+            isLeaf="false"
+            isAbstract="false">
+            <useCaseMoniker
+              Id="de9eb335-f5a6-4f65-bfc3-1a39f299fca8"
+              LastKnownName="распознать текст на изображении"
+              LastKnownLocation="ModelingProject1.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="94cc7a10-12cf-4390-911a-06311583c26f"
+                  name="Пользователь"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="b11a74b3-6b26-4236-9797-c85215cd9ef2"
+                  name="распознать текст на изображении"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="a2caba30-ef7b-4c8d-8062-17357a87bdbd"
+            isDerived="false"
+            sourceEndRoleName="Пользователь"
+            targetEndRoleName="Редактирование изображения1"
+            isLeaf="false"
+            isAbstract="false">
+            <useCaseMoniker
+              Id="6f99bc8b-d7ec-49a2-87cf-4b8c3c62f497"
+              LastKnownName="Задание параметров распознавателя"
+              LastKnownLocation="ModelingProject1.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="df8f940c-76a6-4422-bc09-ecd2dc6c0656"
+                  name="Пользователь"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="221fd22d-59db-4cfd-bc52-860395e6aa52"
+                  name="Редактирование изображения1"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+        </targetEnds>
+      </actor>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="602f9cb5-f028-4654-8b47-0eebea88edd0"
+        name="Редактирование изображения"
+        isAbstract="false"
+        isLeaf="false">
+        <additions>
+          <include
+            Id="1617dd99-d06f-4e28-9cc2-e9a5760b8fd8">
+            <useCaseMoniker
+              Id="c97b3ecf-f780-4fac-960c-bb0e8000c344"
+              LastKnownName="Рукописный ввод"
+              LastKnownLocation="ModelingProject1.uml" />
+          </include>
+          <include
+            Id="29b8d07b-3da9-4bec-a495-bdfc18f86078">
+            <useCaseMoniker
+              Id="8adcc6e9-8593-4fc2-a407-475c5dc1ce98"
+              LastKnownName="Очистить изображение"
+              LastKnownLocation="ModelingProject1.uml" />
+          </include>
+        </additions>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="8adcc6e9-8593-4fc2-a407-475c5dc1ce98"
+        name="Очистить изображение"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="de9eb335-f5a6-4f65-bfc3-1a39f299fca8"
+        name="распознать текст на изображении"
+        isAbstract="false"
+        isLeaf="false">
+        <additions>
+          <include
+            Id="5d190554-289a-4efe-8348-97896e8e2bf2">
+            <useCaseMoniker
+              Id="8e16d363-0137-453d-b2aa-983865c677b3"
+              LastKnownName="Сохранить результат"
+              LastKnownLocation="ModelingProject1.uml" />
+          </include>
+        </additions>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="c97b3ecf-f780-4fac-960c-bb0e8000c344"
+        name="Рукописный ввод"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="8e16d363-0137-453d-b2aa-983865c677b3"
+        name="Сохранить результат"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="6f99bc8b-d7ec-49a2-87cf-4b8c3c62f497"
+        name="Задание параметров распознавателя"
+        isAbstract="false"
+        isLeaf="false">
+        <extendedCases>
+          <extend
+            Id="733caa26-f2b2-4229-90d6-9124f5b4883b">
+            <useCaseMoniker
+              Id="d119402a-ba54-40fb-9e2e-32bd717a71b2"
+              LastKnownName="Загрузка готовых параметров"
+              LastKnownLocation="ModelingProject1.uml" />
+          </extend>
+          <extend
+            Id="54790014-2285-4c7a-97fc-baa42a56c693">
+            <useCaseMoniker
+              Id="b4d76feb-ae8a-4070-992d-1c75e8ab3438"
+              LastKnownName="Обучение распознавателя по базе примеров"
+              LastKnownLocation="ModelingProject1.uml" />
+          </extend>
+        </extendedCases>
+      </useCase>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="b4d76feb-ae8a-4070-992d-1c75e8ab3438"
+        name="Обучение распознавателя по базе примеров"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <useCase
+        Id="d119402a-ba54-40fb-9e2e-32bd717a71b2"
+        name="Загрузка готовых параметров"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <interaction
+        Id="5113329e-31de-48c0-b8c9-9fe4f8e0031d"
+        name="Sequence1"
+        collapseFragmentsFlag="false"
+        isActiveClass="false"
+        isAbstract="false"
+        isLeaf="false"
+        isReentrant="false">
+        <fragments>
+          <behaviorExecutionSpecification
+            Id="9253f6cc-e9f8-4129-bc3f-8f440b02e663"
+            name="BehaviorExecutionSpecification1">
+            <coveredLifelines>
+              <lifelineMoniker
+                Id="abe7836e-9e37-4733-9310-8c641206a120"
+                LastKnownName="Система"
+                LastKnownLocation="ModelingProject1.uml" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker
+                Id="99d279bf-ea62-4b35-a251-41c612d6192c"
+                LastKnownName="ExecutionOccurrenceSpecification2"
+                LastKnownLocation="ModelingProject1.uml" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker
+                Id="b57190c7-c7ed-4c24-b7dc-2de4367ec1d0"
+                LastKnownName="ExecutionOccurrenceSpecification1"
+                LastKnownLocation="ModelingProject1.uml" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker
+                Id="68aff27e-f3a5-43d4-ba53-c9c61c0e2c50"
+                LastKnownName="MessageOccurrenceSpecification2"
+                LastKnownLocation="ModelingProject1.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="a37260c5-e790-46b6-83ff-ba7ce34f65bb"
+                LastKnownName="MessageOccurrenceSpecification3"
+                LastKnownLocation="ModelingProject1.uml" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification
+            Id="b57190c7-c7ed-4c24-b7dc-2de4367ec1d0"
+            name="ExecutionOccurrenceSpecification1">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="3c20637e-141c-422c-80bb-f351d77a6858"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="ModelingProject1.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="abe7836e-9e37-4733-9310-8c641206a120"
+                LastKnownName="Система"
+                LastKnownLocation="ModelingProject1.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="f8b2006c-c1fa-438d-8c96-2f526dbc24c6"
+            name="MessageOccurrenceSpecification1">
+            <covered>
+              <lifelineMoniker
+                Id="989055b2-6e52-40ac-9bd5-d83480625110"
+                LastKnownName="Пользователь"
+                LastKnownLocation="ModelingProject1.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="68aff27e-f3a5-43d4-ba53-c9c61c0e2c50"
+            name="MessageOccurrenceSpecification2">
+            <covered>
+              <lifelineMoniker
+                Id="abe7836e-9e37-4733-9310-8c641206a120"
+                LastKnownName="Система"
+                LastKnownLocation="ModelingProject1.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="a37260c5-e790-46b6-83ff-ba7ce34f65bb"
+            name="MessageOccurrenceSpecification3">
+            <covered>
+              <lifelineMoniker
+                Id="abe7836e-9e37-4733-9310-8c641206a120"
+                LastKnownName="Система"
+                LastKnownLocation="ModelingProject1.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="ab50e945-99b5-45ab-943f-967d105090d5"
+            name="MessageOccurrenceSpecification4">
+            <covered>
+              <lifelineMoniker
+                Id="989055b2-6e52-40ac-9bd5-d83480625110"
+                LastKnownName="Пользователь"
+                LastKnownLocation="ModelingProject1.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification
+            Id="99d279bf-ea62-4b35-a251-41c612d6192c"
+            name="ExecutionOccurrenceSpecification2">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="70da1905-615a-46b2-a055-b2c9b48129de"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="ModelingProject1.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="abe7836e-9e37-4733-9310-8c641206a120"
+                LastKnownName="Система"
+                LastKnownLocation="ModelingProject1.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+        </fragments>
+        <lifelines>
+          <lifeline
+            Id="989055b2-6e52-40ac-9bd5-d83480625110"
+            name="Пользователь"
+            isActor="true"
+            lifelineDisplayName="Пользователь">
+            <represents>
+              <propertyMoniker
+                Id="3d53c203-04cf-4ba2-81b6-664fc4334963"
+                LastKnownLocation="ModelingProject1.uml" />
+            </represents>
+            <topLevelOccurrences>
+              <messageOccurrenceSpecificationMoniker
+                Id="f8b2006c-c1fa-438d-8c96-2f526dbc24c6"
+                LastKnownName="MessageOccurrenceSpecification1"
+                LastKnownLocation="ModelingProject1.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="ab50e945-99b5-45ab-943f-967d105090d5"
+                LastKnownName="MessageOccurrenceSpecification4"
+                LastKnownLocation="ModelingProject1.uml" />
+            </topLevelOccurrences>
+          </lifeline>
+          <lifeline
+            Id="abe7836e-9e37-4733-9310-8c641206a120"
+            name="Система"
+            isActor="true"
+            lifelineDisplayName="Система">
+            <topLevelOccurrences>
+              <executionOccurrenceSpecificationMoniker
+                Id="b57190c7-c7ed-4c24-b7dc-2de4367ec1d0"
+                LastKnownName="ExecutionOccurrenceSpecification1"
+                LastKnownLocation="ModelingProject1.uml" />
+              <executionOccurrenceSpecificationMoniker
+                Id="99d279bf-ea62-4b35-a251-41c612d6192c"
+                LastKnownName="ExecutionOccurrenceSpecification2"
+                LastKnownLocation="ModelingProject1.uml" />
+            </topLevelOccurrences>
+          </lifeline>
+        </lifelines>
+        <messages>
+          <message
+            Id="ac41364c-5807-4c45-b497-602231050cd3"
+            name="Message1"
+            messageKind="Complete"
+            messageSort="SynchCall"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="f8b2006c-c1fa-438d-8c96-2f526dbc24c6"
+                LastKnownName="MessageOccurrenceSpecification1"
+                LastKnownLocation="ModelingProject1.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="68aff27e-f3a5-43d4-ba53-c9c61c0e2c50"
+                LastKnownName="MessageOccurrenceSpecification2"
+                LastKnownLocation="ModelingProject1.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="84a718c4-7525-430c-aeb1-2e01270641e8"
+            name="&lt;&lt;return&gt;&gt;"
+            messageKind="Complete"
+            messageSort="Reply"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="a37260c5-e790-46b6-83ff-ba7ce34f65bb"
+                LastKnownName="MessageOccurrenceSpecification3"
+                LastKnownLocation="ModelingProject1.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="ab50e945-99b5-45ab-943f-967d105090d5"
+                LastKnownName="MessageOccurrenceSpecification4"
+                LastKnownLocation="ModelingProject1.uml" />
+            </receiveEvent>
+          </message>
+        </messages>
+        <ownedAttributesInternal>
+          <property
+            Id="3d53c203-04cf-4ba2-81b6-664fc4334963"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false">
+            <type_NamedElement>
+              <actorMoniker
+                Id="96d85f32-5554-4146-a0e4-00408e9341bc"
+                LastKnownName="Пользователь"
+                LastKnownLocation="ModelingProject1.uml" />
+            </type_NamedElement>
+          </property>
+        </ownedAttributesInternal>
+      </interaction>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="3c20637e-141c-422c-80bb-f351d77a6858"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="70da1905-615a-46b2-a055-b2c9b48129de"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <activity
+        Id="bc623422-3282-4f83-bb9e-e525f7294e9d"
+        name="Activity1"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false"
+        isReentrant="false"
+        isReadOnly="false"
+        isSingleExecution="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <activity
+        Id="36f1dc99-499f-4ac9-a0da-41d2a33d6959"
+        name="Activity2"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false"
+        isReentrant="false"
+        isReadOnly="false"
+        isSingleExecution="false">
+        <nodes>
+          <initialNode
+            Id="bc108250-7ffe-41f0-8926-90d6fb8ae66c"
+            name="Initial1"
+            isLeaf="false">
+            <flowNodeTargets>
+              <controlFlow
+                Id="be31bf3d-2d1e-4318-acfe-fdd231571ed3"
+                isLeaf="false">
+                <forkNodeMoniker
+                  Id="39a8725f-a051-4bd1-be49-fcac318fb716"
+                  LastKnownName="Fork1"
+                  LastKnownLocation="ModelingProject1.uml" />
+              </controlFlow>
+            </flowNodeTargets>
+          </initialNode>
+          <activityFinalNode
+            Id="5b6a352d-49ef-4886-b6a0-477838a7863f"
+            name="ActivityFinal1"
+            isLeaf="false" />
+          <forkNode
+            Id="39a8725f-a051-4bd1-be49-fcac318fb716"
+            name="Fork1"
+            isLeaf="false" />
+          <opaqueAction
+            Id="e4e126ee-8309-495f-8f46-d24d8f74db40"
+            name="Считывание координа мыши"
+            isLeaf="false" />
+          <decisionNode
+            Id="1a107315-91a5-4a40-904a-01e5c5e00c76"
+            name="Decision1"
+            isLeaf="false">
+            <flowNodeTargets>
+              <controlFlow
+                Id="8e60726f-9ec5-4a8f-8501-1ecf50968ded"
+                isLeaf="false">
+                <activityFinalNodeMoniker
+                  Id="5b6a352d-49ef-4886-b6a0-477838a7863f"
+                  LastKnownName="ActivityFinal1"
+                  LastKnownLocation="ModelingProject1.uml" />
+              </controlFlow>
+            </flowNodeTargets>
+          </decisionNode>
+        </nodes>
+      </activity>
+    </packageHasNamedElement>
+  </packagedElements>
+  <primitiveType
+    Id="220a3521-e091-4221-bae9-3ef9018e845c"
+    name="Integer"
+    isAbstract="false"
+    isLeaf="false" />
+  <primitiveType
+    Id="8943dc84-709e-4f62-b15a-a3273aa6f165"
+    name="Boolean"
+    isAbstract="false"
+    isLeaf="false" />
+  <primitiveType
+    Id="59259974-6d55-42c6-b7bd-763d77ac8ef9"
+    name="String"
+    isAbstract="false"
+    isLeaf="false" />
+  <primitiveType
+    Id="3ab42e7d-4969-445a-b209-471f5cb8209c"
+    name="UnlimitedNatural"
+    isAbstract="false"
+    isLeaf="false" />
+</modelStoreModel>
